@@ -23,14 +23,6 @@
             "name": "Attach to Process",
             "address": "localhost",
             "port": 9229
-        }
-        ,
-        {
-            "type": "node",
-            "protocol": "auto",
-            "request": "attach",
-            "name": "Attach to Process With Picker",
-            "processId": "${command:PickProcess}"
-        }      
+        }   
     ]
 }

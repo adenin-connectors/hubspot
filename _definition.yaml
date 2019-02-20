@@ -1,7 +1,6 @@
 ConnectorTitle: Hubspot
 AccessCodeServiceEndpoint: https://app.hubspot.com/oauth/authorize
 AccessTokenServiceEndpoint: https://api.hubapi.com/oauth/v1/token
-ApiEndPoint: https://api.hubapi.com
 UserName: hide
 UserPassword: hide
 ClientId: required
@@ -25,9 +24,6 @@ Custom2Hint: ''
 Custom3Label: Custom Field 3
 Custom3Hint: ''
 Scopes:
-- ScopeName: api
-  ScopeDescription: API Access
-  IsDefault: false
 - ScopeName: tickets
   ScopeDescription: Grants access to tickets.
   IsDefault: false
