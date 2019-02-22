@@ -4,13 +4,11 @@ const api = require('./common/api');
 module.exports = async function (activity) {
 
   try {
-
     api.initialize(activity);
-
     const response = await api('/crm-objects/v1/objects/tickets/paged?properties=subject&properties=content');
 
     // convert response to items[]
-    activity.Response.Data = api.convertIssues(response);
+    activity.Response.Data = api.convertResponse(response);
 
   } catch (error) {
 

@@ -43,7 +43,7 @@ function api(path, opts) {
   });
 }
 // convert response from /issues endpoint to 
-api.convertIssues = function (response) {
+api.convertResponse = function (response) {
   let items = [];
   let tickets = response.body.objects;
   // iterate through each issue and extract id, title, etc. into a new array
