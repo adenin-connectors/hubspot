@@ -1,7 +1,6 @@
 'use strict';
 
-const logger = require('@adenin/cf-logger');
-const handleError = require('@adenin/cf-activity').handleError;
+const cfActivity = require('@adenin/cf-activity');
 const api = require('./common/api');
 
 module.exports = async (activity) => {
@@ -9,7 +8,15 @@ module.exports = async (activity) => {
     api.initialize(activity);
     const currentUser = await api('/integrations/v1/me');
 
+    if (!cfActivity.isResponseOk(activity, currentUser)) {
+      return;
+    }
+
     const tickets = await api('/crm-objects/v1/objects/tickets/paged?properties=subject&properties=content');
+
+    if (!cfActivity.isResponseOk(activity, tickets)) {
+      return;
+    }
 
     let ticketStatus = {
       title: 'Open Tickets',
@@ -37,6 +44,7 @@ module.exports = async (activity) => {
     activity.Response.Data = ticketStatus;
 
   } catch (error) {
-    handleError(error, activity);
+    
+    cfActivity.handleError(error, activity);
   }
 };
