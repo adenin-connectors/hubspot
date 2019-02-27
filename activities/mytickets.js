@@ -18,7 +18,7 @@ module.exports = async function (activity) {
     activity.Response.Data = api.convertResponse(response);
 
   } catch (error) {
-    
+
     cfActivity.handleError(error, activity);
   }
 };
