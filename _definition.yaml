@@ -27,3 +27,6 @@ Scopes:
 - ScopeName: tickets
   ScopeDescription: Grants access to tickets.
   IsDefault: false
+- ScopeName: contacts
+  ScopeDescription: Grants access to contacts.
+  IsDefault: false

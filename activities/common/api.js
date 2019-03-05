@@ -81,6 +81,10 @@ api.initialize = function (activity) {
   _activity = activity;
 };
 
+api.getCurrentUser = function(){
+  return api('/integrations/v1/me');
+};
+
 for (const x of helpers) {
   const method = x.toUpperCase();
   api[x] = (url, opts) => api(url, Object.assign({}, opts, { method }));

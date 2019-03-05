@@ -6,7 +6,7 @@ const api = require('./common/api');
 module.exports = async (activity) => {
   try {
     api.initialize(activity);
-    const currentUser = await api('/integrations/v1/me');
+    const currentUser = await api.getCurrentUser();
 
     if (!cfActivity.isResponseOk(activity, currentUser)) {
       return;
