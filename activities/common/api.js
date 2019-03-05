@@ -3,7 +3,6 @@ const got = require('got');
 const isPlainObj = require('is-plain-obj');
 const HttpAgent = require('agentkeepalive');
 const HttpsAgent = HttpAgent.HttpsAgent;
-const util = require('util')
 
 let _activity = null;
 
@@ -38,15 +37,14 @@ function api(path, opts) {
   }
 
   return got(url, opts).catch(err => {
-
     throw err;
   });
 }
-// convert response from /issues endpoint to 
+//**maps response to items */
 api.convertResponse = function (response) {
   let items = [];
   let tickets = response.body.objects;
-  // iterate through each issue and extract id, title, etc. into a new array
+
   for (let i = 0; i < tickets.length; i++) {
     let raw = tickets[i];
     let ticketProps = raw.properties;
@@ -59,7 +57,7 @@ api.convertResponse = function (response) {
       description: ticketContent.value,
       link: `https://app.hubspot.com/contacts/${raw.portalId}/ticket/${raw.objectId}`,
       raw: raw
-    }
+    };
     items.push(item);
   }
 
@@ -81,7 +79,7 @@ api.stream = (url, opts) => apigot(url, Object.assign({}, opts, {
 
 api.initialize = function (activity) {
   _activity = activity;
-}
+};
 
 for (const x of helpers) {
   const method = x.toUpperCase();

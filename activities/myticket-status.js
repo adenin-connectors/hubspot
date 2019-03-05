@@ -33,18 +33,17 @@ module.exports = async (activity) => {
         color: 'blue',
         value: ticketCount,
         actionable: true
-      }
+      };
     } else {
       ticketStatus = {
         ...ticketStatus,
         description: `You have no tickets assigned`,
         actionable: false
-      }
+      };
     }
     activity.Response.Data = ticketStatus;
 
   } catch (error) {
-
-    cfActivity.handleError(error, activity);
+    cfActivity.handleError(activity, error);
   }
 };
