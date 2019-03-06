@@ -52,7 +52,7 @@ module.exports = async (activity) => {
 
 //**filters tickets based on provided dateRange */
 function filterTicketsByDateRange(tickets, dateRange) {
-  let filteredLeads = [];
+  let filteredTickets = [];
   let timeMin = new Date(dateRange.startDate).valueOf();
   let timeMax = new Date(dateRange.endDate).valueOf();
 
@@ -61,9 +61,9 @@ function filterTicketsByDateRange(tickets, dateRange) {
     let createTime = ticket.properties.content.timestamp;
 
     if (createTime > timeMin && createTime < timeMax) {
-      filteredLeads.push(ticket);
+      filteredTickets.push(ticket);
     }
   }
 
-  return filteredLeads;
+  return filteredTickets;
 }

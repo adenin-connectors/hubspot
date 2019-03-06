@@ -1,5 +1,5 @@
 ServiceName: 'leads-new'
-InterfaceName: 'items'
+InterfaceName: 'status'
 Description: 'New Leads'
 APIDoc: ''
 Interfaces: 'daterange'
