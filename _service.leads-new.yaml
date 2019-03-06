@@ -1,0 +1,8 @@
+ServiceName: 'leads-new'
+InterfaceName: 'items'
+Description: 'New Leads'
+APIDoc: ''
+Interfaces: 'daterange'
+RequiredScopes: ''
+AdditionalParameters:
+Method: ''
