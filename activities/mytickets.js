@@ -42,8 +42,8 @@ function mapResponseToItems(response) {
 
     let item = {
       id: raw.objectId,
-      title: ticketSubj.value,
-      description: ticketContent.value,
+      title: ticketSubj == null ? null : ticketSubj.value,
+      description: ticketContent == null ? null : ticketContent.value,
       link: `https://app.hubspot.com/contacts/${raw.portalId}/ticket/${raw.objectId}`,
       raw: raw
     };

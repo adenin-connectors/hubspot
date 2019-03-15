@@ -37,11 +37,13 @@ function mapResponseToItems(response) {
 
   for (let i = 0; i < leads.length; i++) {
     let raw = leads[i];
+    let firstname = raw.properties.firstname;
+    let lastname = raw.properties.lastname;
 
     let item = {
       id: raw.vid,
-      title: raw.properties.firstname.value,
-      description: raw.properties.lastname.value,
+      title: firstname == null ? null : firstname.value,
+      description: lastname == null ? null : lastname.value,
       link: raw["profile-url"],
       raw: raw
     };
