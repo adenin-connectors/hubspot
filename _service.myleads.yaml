@@ -1,6 +1,6 @@
-ServiceName: 'mytickets'
+ServiceName: 'myleads'
 InterfaceName: 'items'
-Description: List Of Tickets
+Description: 'My Leads'
 APIDoc: ''
 Interfaces: 'search,pagination'
 RequiredScopes: ''

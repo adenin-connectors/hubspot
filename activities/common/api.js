@@ -40,29 +40,7 @@ function api(path, opts) {
     throw err;
   });
 }
-//**maps response to items */
-api.convertResponse = function (response) {
-  let items = [];
-  let tickets = response.body.objects;
 
-  for (let i = 0; i < tickets.length; i++) {
-    let raw = tickets[i];
-    let ticketProps = raw.properties;
-    let ticketSubj = ticketProps.subject;
-    let ticketContent = ticketProps.content;
-
-    let item = {
-      id: raw.objectId,
-      title: ticketSubj.value,
-      description: ticketContent.value,
-      link: `https://app.hubspot.com/contacts/${raw.portalId}/ticket/${raw.objectId}`,
-      raw: raw
-    };
-    items.push(item);
-  }
-
-  return { items: items };
-}
 const helpers = [
   'get',
   'post',

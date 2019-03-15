@@ -10,9 +10,9 @@ module.exports = async function (activity) {
     api.initialize(activity);
 
     let pagination = cfActivity.pagination(activity);
-    let url = `/crm-objects/v1/objects/tickets/paged?properties=subject&properties=content`;
+    let url = `/contacts/v1/lists/all/contacts/all?count=${pagination.pageSize}`;
     if (pagination.nextpage) {
-      url += `&offset=${pagination.nextpage}`;
+      url += `&vidOffset=${pagination.nextpage}`;
     }
 
     const response = await api(url);
@@ -22,29 +22,27 @@ module.exports = async function (activity) {
     }
 
     activity.Response.Data = mapResponseToItems(response);
-    if (response.body.hasMore) {
-      activity.Response.Data._nextpage = response.body.offset;
+    if (response.body['has-more']) {
+      activity.Response.Data._nextpage = response.body['vid-offset'];
     }
   } catch (error) {
     cfActivity.handleError(activity, error);
   }
 };
+
 //**maps response to items */
 function mapResponseToItems(response) {
   let items = [];
-  let tickets = response.body.objects;
+  let leads = response.body.contacts;
 
-  for (let i = 0; i < tickets.length; i++) {
-    let raw = tickets[i];
-    let ticketProps = raw.properties;
-    let ticketSubj = ticketProps.subject;
-    let ticketContent = ticketProps.content;
+  for (let i = 0; i < leads.length; i++) {
+    let raw = leads[i];
 
     let item = {
-      id: raw.objectId,
-      title: ticketSubj.value,
-      description: ticketContent.value,
-      link: `https://app.hubspot.com/contacts/${raw.portalId}/ticket/${raw.objectId}`,
+      id: raw.vid,
+      title: raw.properties.firstname.value,
+      description: raw.properties.lastname.value,
+      link: raw["profile-url"],
       raw: raw
     };
     items.push(item);
