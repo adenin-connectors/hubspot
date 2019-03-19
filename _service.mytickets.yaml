@@ -2,7 +2,7 @@ ServiceName: 'mytickets'
 InterfaceName: 'items'
 Description: List Of Tickets
 APIDoc: ''
-Interfaces: 'search,pagination'
+Interfaces: 'pagination'
 RequiredScopes: ''
 AdditionalParameters:
 Method: ''

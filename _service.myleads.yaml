@@ -2,7 +2,7 @@ ServiceName: 'myleads'
 InterfaceName: 'items'
 Description: 'My Leads'
 APIDoc: ''
-Interfaces: 'search,pagination'
+Interfaces: 'pagination'
 RequiredScopes: ''
 AdditionalParameters:
 Method: ''

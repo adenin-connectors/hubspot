@@ -59,7 +59,7 @@ api.initialize = function (activity) {
   _activity = activity;
 };
 
-api.getCurrentUser = function(){
+api.getCurrentUser = function () {
   return api('/integrations/v1/me');
 };
 
@@ -68,5 +68,28 @@ for (const x of helpers) {
   api[x] = (url, opts) => api(url, Object.assign({}, opts, { method }));
   api.stream[x] = (url, opts) => api.stream(url, Object.assign({}, opts, { method }));
 }
+
+//**maps response to items */
+api.mapLeadsToItems = function (response) {
+  let items = [];
+  let leads = response.body.contacts;
+
+  for (let i = 0; i < leads.length; i++) {
+    let raw = leads[i];
+    let firstname = raw.properties.firstname;
+    let lastname = raw.properties.lastname;
+
+    let item = {
+      id: raw.vid,
+      title: firstname == null ? null : firstname.value,
+      description: lastname == null ? null : lastname.value,
+      link: raw["profile-url"],
+      raw: raw
+    };
+    items.push(item);
+  }
+
+  return { items: items };
+};
 
 module.exports = api;

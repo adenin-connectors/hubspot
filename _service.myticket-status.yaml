@@ -2,7 +2,7 @@ ServiceName: 'myticket-status'
 InterfaceName: 'status'
 Description: 'My Hubspot Ticket Status'
 APIDoc: ''
-Interfaces: 'search,pagination'
+Interfaces: 'pagination'
 RequiredScopes: ''
 AdditionalParameters:
 Method: ''

@@ -2,7 +2,7 @@ ServiceName: 'myleads-status'
 InterfaceName: 'status'
 Description: 'My Leads Status'
 APIDoc: ''
-Interfaces: 'search,pagination'
+Interfaces: 'pagination'
 RequiredScopes: ''
 AdditionalParameters:
 Method: ''

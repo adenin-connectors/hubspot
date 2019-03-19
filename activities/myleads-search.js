@@ -10,7 +10,8 @@ module.exports = async function (activity) {
     api.initialize(activity);
 
     let pagination = cfActivity.pagination(activity);
-    let url = `/contacts/v1/lists/all/contacts/all?count=${pagination.pageSize}`;
+
+    let url = `/contacts/v1/search/query?q=${activity.Request.Query.query || ""}&count=${pagination.pageSize}`;
     if (pagination.nextpage) {
       url += `&vidOffset=${pagination.nextpage}`;
     }
