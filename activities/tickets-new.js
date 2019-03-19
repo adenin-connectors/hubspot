@@ -1,5 +1,4 @@
 'use strict';
-
 const cfActivity = require('@adenin/cf-activity');
 const api = require('./common/api');
 
@@ -43,7 +42,7 @@ module.exports = async (activity) => {
         actionable: false
       };
     }
-    
+
     activity.Response.Data = ticketStatus;
   } catch (error) {
     cfActivity.handleError(activity, error);

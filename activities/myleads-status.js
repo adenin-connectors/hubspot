@@ -1,5 +1,4 @@
 'use strict';
-
 const cfActivity = require('@adenin/cf-activity');
 const api = require('./common/api');
 
