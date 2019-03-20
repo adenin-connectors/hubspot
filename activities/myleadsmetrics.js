@@ -13,7 +13,6 @@ module.exports = async function (activity) {
 
     let url = `https://api.hubapi.com/contacts/search/v1/external/lifecyclestages?` +
       `fromTimestamp=${start}&toTimestamp=${end}`;
-
     const response = await api(url);
 
     if (!cfActivity.isResponseOk(activity, response)) {
@@ -24,6 +23,7 @@ module.exports = async function (activity) {
   } catch (error) {
     cfActivity.handleError(activity, error);
   }
+
 };
 
 //** maps response data to data format usable by chart */
@@ -34,25 +34,29 @@ function mapResponseToChartData(response) {
 
   for (let i = 0; i < rawData.length; i++) {
     labels.push(rawData[i].lifecycleStage);
-    datasets.push({ label: rawData[i].lifecycleStage, data: rawData[i].count });
+    let data = [];
+    data.push(rawData[i].count);
+    datasets.push({ label: rawData[i].lifecycleStage, data });
   }
 
   let chartData = {
-    configuration: {
-      data: {},
-      options: {
-        title: {
-          display: true,
-          text: 'Lifecycle Stage Metrics'
+    chart: {
+      configuration: {
+        data: {},
+        options: {
+          title: {
+            display: true,
+            text: 'Lifecycle Stage Metrics'
+          }
         }
-      }
+      },
+      template: 'bar',
+      palette: 'office.Office6'
     },
-    template: 'bar',
-    palette: 'office.Office6'
+    _settings: {}
   };
-
-  chartData.configuration.data.labels = labels;
-  chartData.configuration.data.datasets = datasets;
+  chartData.chart.configuration.data.labels = labels;
+  chartData.chart.configuration.data.datasets = datasets;
 
   return chartData;
 }
