@@ -1,6 +1,6 @@
-ServiceName: 'myleads'
+ServiceName: 'leads'
 InterfaceName: 'items'
-Description: 'My Leads'
+Description: 'Leads'
 APIDoc: ''
 Interfaces: 'pagination'
 RequiredScopes: ''

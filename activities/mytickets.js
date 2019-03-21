@@ -3,7 +3,6 @@ const cfActivity = require('@adenin/cf-activity');
 const api = require('./common/api');
 
 module.exports = async function (activity) {
-
   try {
     api.initialize(activity);
 

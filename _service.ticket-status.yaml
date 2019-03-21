@@ -1,6 +1,6 @@
-ServiceName: 'myticket-status'
+ServiceName: 'ticket-status'
 InterfaceName: 'status'
-Description: 'My Hubspot Ticket Status'
+Description: 'Ticket Status'
 APIDoc: ''
 Interfaces: 'pagination'
 RequiredScopes: ''

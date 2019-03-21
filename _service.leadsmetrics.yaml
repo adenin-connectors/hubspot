@@ -1,0 +1,8 @@
+ServiceName: 'myleadsmetrics'
+InterfaceName: 'chart'
+Description: 'Leads Metrics'
+APIDoc: ''
+Interfaces: 'daterange'
+RequiredScopes: ''
+AdditionalParameters:
+Method: ''

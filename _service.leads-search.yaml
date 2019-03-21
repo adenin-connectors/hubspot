@@ -1,6 +1,6 @@
-ServiceName: 'myleads-search'
+ServiceName: 'leads-search'
 InterfaceName: 'items'
-Description: 'Search My Leads'
+Description: 'Search Leads'
 APIDoc: ''
 Interfaces: 'search,pagination'
 RequiredScopes: ''

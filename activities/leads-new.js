@@ -18,7 +18,7 @@ module.exports = async (activity) => {
     }
 
     var dateRange = cfActivity.dateRange(activity, "today");
-    let filteredLeads = filterLeadsByDateRange(newLeads.body.contacts, dateRange);
+    let filteredLeads = api.filterLeadsByDateRange(newLeads.body.contacts, dateRange);
 
     let leadsStatus = {
       title: 'New Leads',
@@ -49,20 +49,3 @@ module.exports = async (activity) => {
     cfActivity.handleError(activity, error);
   }
 };
-
-//**filters leads based on provided dateRange */
-function filterLeadsByDateRange(leads, dateRange) {
-  let filteredLeads = [];
-  let timeMin = new Date(dateRange.startDate).valueOf();
-  let timeMax = new Date(dateRange.endDate).valueOf();
-
-  for (let i = 0; i < leads.length; i++) {
-    const lead = leads[i];
-
-    if (lead.addedAt > timeMin && lead.addedAt < timeMax) {
-      filteredLeads.push(lead);
-    }
-  }
-
-  return filteredLeads;
-}

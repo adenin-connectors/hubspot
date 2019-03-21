@@ -1,6 +1,6 @@
-ServiceName: 'myleads-status'
-InterfaceName: 'status'
-Description: 'My Leads Status'
+ServiceName: 'tickets'
+InterfaceName: 'items'
+Description: List Of Tickets
 APIDoc: ''
 Interfaces: 'pagination'
 RequiredScopes: ''

@@ -11,7 +11,7 @@ module.exports = async function (activity) {
     let start = new Date(dateRange.startDate).valueOf();
     let end = new Date(dateRange.endDate).valueOf();
 
-    let url = `https://api.hubapi.com/contacts/search/v1/external/lifecyclestages?` +
+    let url = `/contacts/search/v1/external/lifecyclestages?` +
       `fromTimestamp=${start}&toTimestamp=${end}`;
     const response = await api(url);
 
@@ -23,7 +23,6 @@ module.exports = async function (activity) {
   } catch (error) {
     cfActivity.handleError(activity, error);
   }
-
 };
 
 //** maps response data to data format usable by chart */

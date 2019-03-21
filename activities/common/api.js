@@ -92,4 +92,21 @@ api.mapLeadsToItems = function (response) {
   return { items: items };
 };
 
+//**filters leads based on provided dateRange */
+api.filterLeadsByDateRange = function (leads, dateRange) {
+  let filteredLeads = [];
+  let timeMin = new Date(dateRange.startDate).valueOf();
+  let timeMax = new Date(dateRange.endDate).valueOf();
+
+  for (let i = 0; i < leads.length; i++) {
+    const lead = leads[i];
+
+    if (lead.addedAt > timeMin && lead.addedAt < timeMax) {
+      filteredLeads.push(lead);
+    }
+  }
+
+  return filteredLeads;
+}
+
 module.exports = api;

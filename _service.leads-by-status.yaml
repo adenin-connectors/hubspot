@@ -1,6 +1,6 @@
-ServiceName: 'myleadsmetrics'
+ServiceName: 'leads-by-status'
 InterfaceName: 'chart'
-Description: 'My Leads Metrics'
+Description: 'Leads By Status'
 APIDoc: ''
 Interfaces: 'daterange'
 RequiredScopes: ''
