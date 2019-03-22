@@ -14,7 +14,7 @@ module.exports = async (activity) => {
 
     var dateRange = cfActivity.dateRange(activity, "today");
     let filteredLeads = api.filterLeadsByDateRange(response.body.contacts, dateRange);
-
+    
     activity.Response.Data = mapResponseToChartData(filteredLeads);
   } catch (error) {
     cfActivity.handleError(error, activity);
@@ -24,6 +24,7 @@ module.exports = async (activity) => {
 function mapResponseToChartData(leads) {
   let labels = [];
   let datasets = [];
+  let data = [];
 
   for (let i = 0; i < leads.length; i++) {
     if (leads[i].properties.hs_lead_status) {
@@ -44,10 +45,9 @@ function mapResponseToChartData(leads) {
         }
       }
     }
-    let data = [];
     data.push(counter);
-    datasets.push({ label: labels[x], data });
   }
+  datasets.push({ label: 'Number Of Leads', data });
 
   let chartData = {
     chart: {
@@ -56,7 +56,7 @@ function mapResponseToChartData(leads) {
         options: {
           title: {
             display: true,
-            text: 'Lead Status Metrics'
+            text: 'Lead Metrics By Status'
           }
         }
       },

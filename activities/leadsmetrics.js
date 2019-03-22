@@ -30,13 +30,12 @@ function mapResponseToChartData(response) {
   let labels = [];
   let datasets = [];
   let rawData = response.body;
-
+  let data = [];
   for (let i = 0; i < rawData.length; i++) {
-    labels.push(rawData[i].lifecycleStage);
-    let data = [];
+    labels.push(rawData[i].lifecycleStage.replace('hs_lifecyclestage_','').replace('_date',''));
     data.push(rawData[i].count);
-    datasets.push({ label: rawData[i].lifecycleStage, data });
   }
+  datasets.push({ label: 'Number Of Leads', data });
 
   let chartData = {
     chart: {
