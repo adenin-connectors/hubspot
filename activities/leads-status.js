@@ -1,26 +1,20 @@
 'use strict';
-const cfActivity = require('@adenin/cf-activity');
 const api = require('./common/api');
 
 module.exports = async (activity) => {
   try {
-    api.initialize(activity);
     const currentUser = await api.getCurrentUser();
 
-    if (!cfActivity.isResponseOk(activity, currentUser)) {
-      return;
-    }
+    if (Activity.isErrorResponse(currentUser)) return;
 
     const leads = await api('/contacts/v1/lists/all/contacts/all');
 
-    if (!cfActivity.isResponseOk(activity, leads)) {
-      return;
-    }
+    if (Activity.isErrorResponse(leads)) return;
 
     let leadsStatus = {
-      title: 'Leads',
+      title: T('Leads'),
       url: `https://app.hubspot.com/contacts/${currentUser.body.portalId}/contacts/list/view/all`,
-      urlLabel: 'All Leads',
+      urlLabel: T('All Leads'),
     };
 
     let leadCount = leads.body.contacts.length;
@@ -28,7 +22,7 @@ module.exports = async (activity) => {
     if (leadCount != 0) {
       leadsStatus = {
         ...leadsStatus,
-        description: `You have ${leadCount > 1 ? leadCount + " leads" : leadCount + " lead"}.`,
+        description: leadCount > 1 ? T("You have {0} leads.", leadCount) : T("You have 1 lead."),
         color: 'blue',
         value: leadCount,
         actionable: true
@@ -36,13 +30,13 @@ module.exports = async (activity) => {
     } else {
       leadsStatus = {
         ...leadsStatus,
-        description: `You have no leads.`,
+        description: T(`You have no leads.`),
         actionable: false
       };
     }
     activity.Response.Data = leadsStatus;
 
   } catch (error) {
-    cfActivity.handleError(activity, error);
+    Activity.handleError(error);
   }
 };

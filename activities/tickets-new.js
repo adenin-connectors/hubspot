@@ -1,36 +1,31 @@
 'use strict';
-const cfActivity = require('@adenin/cf-activity');
 const api = require('./common/api');
 
 module.exports = async (activity) => {
   try {
-    api.initialize(activity);
     const currentUser = await api.getCurrentUser();
 
-    if (!cfActivity.isResponseOk(activity, currentUser)) {
-      return;
-    }
+    if (Activity.isErrorResponse(currentUser)) return;
 
     const tickets = await api('/crm-objects/v1/objects/tickets/paged?properties=subject&properties=content');
 
-    if (!cfActivity.isResponseOk(activity, tickets)) {
-      return;
-    }
-    var dateRange = cfActivity.dateRange(activity, "today");
+    if (Activity.isErrorResponse(tickets)) return;
+
+    var dateRange = Activity.dateRange("today");
     let filteredTickets = filterTicketsByDateRange(tickets.body.objects, dateRange);
 
     let ticketStatus = {
-      title: 'New Tickets',
+      title: T('New Tickets'),
       url: `https://app.hubspot.com/contacts/${currentUser.body.portalId}/tickets/list/view/all/`,
-      urlLabel: 'All tickets',
+      urlLabel: T('All tickets'),
     };
 
     let ticketCount = filteredTickets.length;
-
+    
     if (ticketCount != 0) {
       ticketStatus = {
         ...ticketStatus,
-        description: `You have ${ticketCount > 1 ? ticketCount + " new tickets" : ticketCount + " new ticket"} assigned`,
+        description: ticketCount > 1 ? T("You have {0} new tickets.", ticketCount) : T("You have 1 new ticket."),
         color: 'blue',
         value: ticketCount,
         actionable: true
@@ -38,14 +33,14 @@ module.exports = async (activity) => {
     } else {
       ticketStatus = {
         ...ticketStatus,
-        description: `You have no new tickets assigned`,
+        description: T(`You have no new tickets.`),
         actionable: false
       };
     }
 
     activity.Response.Data = ticketStatus;
   } catch (error) {
-    cfActivity.handleError(activity, error);
+    Activity.handleError(error);
   }
 };
 
@@ -57,7 +52,7 @@ function filterTicketsByDateRange(tickets, dateRange) {
 
   for (let i = 0; i < tickets.length; i++) {
     const ticket = tickets[i];
-    let createTime = ticket.properties.content.timestamp;
+    let createTime = ticket.properties.subject.timestamp;
 
     if (createTime > timeMin && createTime < timeMax) {
       filteredTickets.push(ticket);

@@ -1,37 +1,31 @@
 'use strict';
-const cfActivity = require('@adenin/cf-activity');
 const api = require('./common/api');
 
 module.exports = async (activity) => {
   try {
-    api.initialize(activity);
     const currentUser = await api.getCurrentUser();
 
-    if (!cfActivity.isResponseOk(activity, currentUser)) {
-      return;
-    }
+    if (Activity.isErrorResponse(currentUser)) return;
 
     const newLeads = await api('/contacts/v1/lists/all/contacts/recent');
 
-    if (!cfActivity.isResponseOk(activity, newLeads)) {
-      return;
-    }
+    if (Activity.isErrorResponse(newLeads)) return;
 
-    var dateRange = cfActivity.dateRange(activity, "today");
+    var dateRange = Activity.dateRange("today");
     let filteredLeads = api.filterLeadsByDateRange(newLeads.body.contacts, dateRange);
 
     let leadsStatus = {
-      title: 'New Leads',
+      title: T('New Leads'),
       url: `https://app.hubspot.com/contacts/${currentUser.body.portalId}/contacts/list/view/all`,
-      urlLabel: 'All Leads',
+      urlLabel: T('All Leads'),
     };
 
     let leadCount = filteredLeads.length;
-
+    
     if (leadCount != 0) {
       leadsStatus = {
         ...leadsStatus,
-        description: `You have ${leadCount > 1 ? leadCount + " new leads" : leadCount + " new lead"}.`,
+        description: leadCount > 1 ? T("You have {0} new leads.", leadCount) : T("You have 1 new lead."),
         color: 'blue',
         value: leadCount,
         actionable: true
@@ -39,13 +33,13 @@ module.exports = async (activity) => {
     } else {
       leadsStatus = {
         ...leadsStatus,
-        description: `You have no new leads.`,
+        description: T(`You have no new leads.`),
         actionable: false
       };
     }
 
     activity.Response.Data = leadsStatus;
   } catch (error) {
-    cfActivity.handleError(activity, error);
+    Activity.handleError(error);
   }
 };

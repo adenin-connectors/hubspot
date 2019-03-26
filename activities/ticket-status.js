@@ -1,34 +1,28 @@
 'use strict';
-const cfActivity = require('@adenin/cf-activity');
 const api = require('./common/api');
 
 module.exports = async (activity) => {
   try {
-    api.initialize(activity);
     const currentUser = await api.getCurrentUser();
 
-    if (!cfActivity.isResponseOk(activity, currentUser)) {
-      return;
-    }
+    if (Activity.isErrorResponse(currentUser)) return;
 
     const tickets = await api('/crm-objects/v1/objects/tickets/paged?properties=subject&properties=content');
 
-    if (!cfActivity.isResponseOk(activity, tickets)) {
-      return;
-    }
+    if (Activity.isErrorResponse(tickets)) return;
 
     let ticketStatus = {
-      title: 'Open Tickets',
+      title: T('Open Tickets'),
       url: `https://app.hubspot.com/contacts/${currentUser.body.portalId}/tickets/list/view/all/`,
-      urlLabel: 'All tickets',
+      urlLabel: T('All tickets'),
     };
 
     let ticketCount = tickets.body.objects.length;
-
+    
     if (ticketCount != 0) {
       ticketStatus = {
         ...ticketStatus,
-        description: `You have ${ticketCount > 1 ? ticketCount + " tickets" : ticketCount + " ticket"} assigned`,
+        description: ticketCount > 1 ? T("You have {0} tickets.", ticketCount) : T("You have 1 ticket."),
         color: 'blue',
         value: ticketCount,
         actionable: true
@@ -36,13 +30,13 @@ module.exports = async (activity) => {
     } else {
       ticketStatus = {
         ...ticketStatus,
-        description: `You have no tickets assigned`,
+        description: T(`You have no tickets.`),
         actionable: false
       };
     }
-    activity.Response.Data = ticketStatus;
 
+    activity.Response.Data = ticketStatus;
   } catch (error) {
-    cfActivity.handleError(activity, error);
+    Activity.handleError(error);
   }
 };

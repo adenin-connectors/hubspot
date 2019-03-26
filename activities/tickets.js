@@ -1,12 +1,9 @@
 'use strict';
-const cfActivity = require('@adenin/cf-activity');
 const api = require('./common/api');
 
 module.exports = async function (activity) {
   try {
-    api.initialize(activity);
-
-    let pagination = cfActivity.pagination(activity);
+    let pagination = Activity.pagination();
     let url = `/crm-objects/v1/objects/tickets/paged?properties=subject&properties=content`;
     if (pagination.nextpage) {
       url += `&offset=${pagination.nextpage}`;
@@ -14,16 +11,14 @@ module.exports = async function (activity) {
 
     const response = await api(url);
 
-    if (!cfActivity.isResponseOk(activity, response)) {
-      return;
-    }
+    if (Activity.isErrorResponse(response)) return;
 
     activity.Response.Data = mapResponseToItems(response);
     if (response.body.hasMore) {
       activity.Response.Data._nextpage = response.body.offset;
     }
   } catch (error) {
-    cfActivity.handleError(activity, error);
+    Activity.handleError(error);
   }
 };
 //**maps response to items */

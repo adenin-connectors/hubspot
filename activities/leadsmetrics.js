@@ -1,13 +1,10 @@
 'use strict';
-const cfActivity = require('@adenin/cf-activity');
 const api = require('./common/api');
 
 module.exports = async function (activity) {
 
   try {
-    api.initialize(activity);
-
-    let dateRange = cfActivity.dateRange(activity, "today");
+    let dateRange = Activity.dateRange("today");
     let start = new Date(dateRange.startDate).valueOf();
     let end = new Date(dateRange.endDate).valueOf();
 
@@ -15,13 +12,11 @@ module.exports = async function (activity) {
       `fromTimestamp=${start}&toTimestamp=${end}`;
     const response = await api(url);
 
-    if (!cfActivity.isResponseOk(activity, response)) {
-      return;
-    }
+    if (Activity.isErrorResponse(response)) return;
 
     activity.Response.Data = mapResponseToChartData(response);
   } catch (error) {
-    cfActivity.handleError(activity, error);
+    Activity.handleError(error);
   }
 };
 
@@ -32,7 +27,7 @@ function mapResponseToChartData(response) {
   let rawData = response.body;
   let data = [];
   for (let i = 0; i < rawData.length; i++) {
-    labels.push(rawData[i].lifecycleStage.replace('hs_lifecyclestage_','').replace('_date',''));
+    labels.push(rawData[i].lifecycleStage.replace('hs_lifecyclestage_', '').replace('_date', ''));
     data.push(rawData[i].count);
   }
   datasets.push({ label: 'Number Of Leads', data });

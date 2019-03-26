@@ -1,23 +1,18 @@
 'use strict';
-const logger = require('@adenin/cf-logger');
-const cfActivity = require('@adenin/cf-activity');
 const api = require('./common/api');
 
 module.exports = async (activity) => {
   try {
-    api.initialize(activity);
     const response = await api('/contacts/v1/lists/all/contacts/recent?&property=hs_lead_status');
 
-    if (!cfActivity.isResponseOk(activity, response)) {
-      return;
-    }
+    if (Activity.isErrorResponse(response)) return;
 
-    var dateRange = cfActivity.dateRange(activity, "today");
+    var dateRange = Activity.dateRange("today");
     let filteredLeads = api.filterLeadsByDateRange(response.body.contacts, dateRange);
-    
+
     activity.Response.Data = mapResponseToChartData(filteredLeads);
   } catch (error) {
-    cfActivity.handleError(error, activity);
+    Activity.handleError(error);
   }
 };
 //** maps response data to data format usable by chart */

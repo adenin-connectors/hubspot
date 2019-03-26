@@ -1,13 +1,10 @@
 'use strict';
-const cfActivity = require('@adenin/cf-activity');
 const api = require('./common/api');
 
 module.exports = async function (activity) {
 
   try {
-    api.initialize(activity);
-
-    let pagination = cfActivity.pagination(activity);
+    let pagination = Activity.pagination();
 
     let url = `/contacts/v1/search/query?q=${activity.Request.Query.query || ""}&count=${pagination.pageSize}`;
     if (pagination.nextpage) {
@@ -16,15 +13,13 @@ module.exports = async function (activity) {
 
     const response = await api(url);
 
-    if (!cfActivity.isResponseOk(activity, response)) {
-      return;
-    }
+    if (Activity.isErrorResponse(response)) return;
 
     activity.Response.Data = api.mapLeadsToItems(response);
     if (response.body['has-more']) {
       activity.Response.Data._nextpage = response.body['vid-offset'];
     }
   } catch (error) {
-    cfActivity.handleError(activity, error);
+    Activity.handleError(error);
   }
 };
