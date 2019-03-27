@@ -13,8 +13,8 @@ module.exports = async (activity) => {
 
     let ticketStatus = {
       title: T('Open Tickets'),
-      url: `https://app.hubspot.com/contacts/${currentUser.body.portalId}/tickets/list/view/all/`,
-      urlLabel: T('All tickets'),
+      link: `https://app.hubspot.com/contacts/${currentUser.body.portalId}/tickets/list/view/all/`,
+      linkLabel: T('All Tickets')
     };
 
     let ticketCount = tickets.body.objects.length;

@@ -16,8 +16,8 @@ module.exports = async (activity) => {
 
     let leadsStatus = {
       title: T('New Leads'),
-      url: `https://app.hubspot.com/contacts/${currentUser.body.portalId}/contacts/list/view/all`,
-      urlLabel: T('All Leads'),
+      link: `https://app.hubspot.com/contacts/${currentUser.body.portalId}/contacts/list/view/all`,
+      linkLabel: T('All Leads')
     };
 
     let leadCount = filteredLeads.length;
