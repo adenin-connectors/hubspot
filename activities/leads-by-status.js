@@ -22,22 +22,18 @@ function mapResponseToChartData(leads) {
   let data = [];
 
   for (let i = 0; i < leads.length; i++) {
-    if (leads[i].properties.hs_lead_status) {
-      let status = leads[i].properties.hs_lead_status.value;
-      if (!labels.includes(status)) {
-        labels.push(status);
-      }
+    let status = leads[i].properties.hs_lead_status ? leads[i].properties.hs_lead_status.value : "No Status";
+    if (!labels.includes(status)) {
+      labels.push(status);
     }
   }
 
   for (let x = 0; x < labels.length; x++) {
     let counter = 0;
     for (let y = 0; y < leads.length; y++) {
-      if (leads[y].properties.hs_lead_status) {
-        let status = leads[y].properties.hs_lead_status.value;
-        if (labels[x] == status) {
-          counter++;
-        }
+      let status = leads[y].properties.hs_lead_status ? leads[y].properties.hs_lead_status.value : "No Status";
+      if (labels[x] == status) {
+        counter++;
       }
     }
     data.push(counter);
