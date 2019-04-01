@@ -1,8 +1,0 @@
-ServiceName: 'create-ticket'
-InterfaceName: 'create'
-Description: 'Create New Ticket'
-APIDoc: ''
-Interfaces: 'search,pagination'
-RequiredScopes: ''
-AdditionalParameters:
-Method: ''

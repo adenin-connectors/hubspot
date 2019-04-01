@@ -1,0 +1,8 @@
+ServiceName: 'ticket-create'
+InterfaceName: 'create'
+Description: 'Create Ticket'
+APIDoc: ''
+Interfaces: ''
+RequiredScopes: ''
+AdditionalParameters:
+Method: ''

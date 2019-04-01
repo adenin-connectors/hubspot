@@ -10,7 +10,8 @@
   "dependencies": {
     "@adenin/cf-provider": "^2.4.3",
     "agentkeepalive": "^4.0.2",
-    "got": "^9.6.0"
+    "got": "^9.6.0",
+    "js-yaml": "^3.13.0"
   },
   "devDependencies": {
     "@adenin/cf-logger": "^1.5.1",
