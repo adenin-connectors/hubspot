@@ -3,7 +3,8 @@ const api = require('./common/api');
 
 module.exports = async function (activity) {
   try {
-    let pagination = Activity.pagination();
+    api.initialize(activity);
+    let pagination = $.pagination(activity);
     let url = `/crm-objects/v1/objects/tickets/paged?properties=subject&properties=content`;
     if (pagination.nextpage) {
       url += `&offset=${pagination.nextpage}`;
@@ -11,14 +12,14 @@ module.exports = async function (activity) {
 
     const response = await api(url);
 
-    if (Activity.isErrorResponse(response)) return;
+    if ($.isErrorResponse(activity, response)) return;
 
     activity.Response.Data = mapResponseToItems(response);
     if (response.body.hasMore) {
       activity.Response.Data._nextpage = response.body.offset;
     }
   } catch (error) {
-    Activity.handleError(error);
+    $.handleError(activity, error);
   }
 };
 //**maps response to items */

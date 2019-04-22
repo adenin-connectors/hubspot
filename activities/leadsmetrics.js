@@ -4,19 +4,20 @@ const api = require('./common/api');
 module.exports = async function (activity) {
 
   try {
-    let dateRange = Activity.dateRange("today");
+    let dateRange = $.dateRange(activity, "today");
     let start = new Date(dateRange.startDate).valueOf();
     let end = new Date(dateRange.endDate).valueOf();
 
+    api.initialize(activity);
     let url = `/contacts/search/v1/external/lifecyclestages?` +
       `fromTimestamp=${start}&toTimestamp=${end}`;
     const response = await api(url);
 
-    if (Activity.isErrorResponse(response)) return;
+    if ($.isErrorResponse(activity, response)) return;
 
     activity.Response.Data = mapResponseToChartData(response);
   } catch (error) {
-    Activity.handleError(error);
+    $.handleError(activity, error);
   }
 };
 

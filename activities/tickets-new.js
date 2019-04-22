@@ -3,29 +3,30 @@ const api = require('./common/api');
 
 module.exports = async (activity) => {
   try {
+    api.initialize(activity);
     const currentUser = await api.getCurrentUser();
 
-    if (Activity.isErrorResponse(currentUser)) return;
+    if ($.isErrorResponse(activity, currentUser)) return;
 
     const tickets = await api('/crm-objects/v1/objects/tickets/paged?properties=subject&properties=content');
 
-    if (Activity.isErrorResponse(tickets)) return;
+    if ($.isErrorResponse(activity, tickets)) return;
 
-    var dateRange = Activity.dateRange("today");
+    var dateRange = $.dateRange(activity, "today");
     let filteredTickets = filterTicketsByDateRange(tickets.body.objects, dateRange);
 
     let ticketStatus = {
-      title: T('New Tickets'),
+      title: T(activity, 'New Tickets'),
       link: `https://app.hubspot.com/contacts/${currentUser.body.portalId}/tickets/list/view/all/`,
-      linkLabel: T('All Tickets')
+      linkLabel: T(activity, 'All Tickets')
     };
 
     let ticketCount = filteredTickets.length;
-    
+
     if (ticketCount != 0) {
       ticketStatus = {
         ...ticketStatus,
-        description: ticketCount > 1 ? T("You have {0} new tickets.", ticketCount) : T("You have 1 new ticket."),
+        description: ticketCount > 1 ? T(activity, "You have {0} new tickets.", ticketCount) : T(activity, "You have 1 new ticket."),
         color: 'blue',
         value: ticketCount,
         actionable: true
@@ -33,14 +34,14 @@ module.exports = async (activity) => {
     } else {
       ticketStatus = {
         ...ticketStatus,
-        description: T(`You have no new tickets.`),
+        description: T(activity, `You have no new tickets.`),
         actionable: false
       };
     }
 
     activity.Response.Data = ticketStatus;
   } catch (error) {
-    Activity.handleError(error);
+    $.handleError(activity, error);
   }
 };
 
