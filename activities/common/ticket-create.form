@@ -1,0 +1,21 @@
+$type: form
+properties:
+  subject:
+    type: string
+    title: Subject
+    name: subject
+    required: !!bool true
+  description:
+    type: string
+    title: Description
+    xtype: textarea
+    name: description
+rules:
+  - caption: 'Rule #1'
+    position: !!int 1
+    rule:
+      conditions:
+        kind: all
+        conditions: []
+      actions: []
+$meta: {}

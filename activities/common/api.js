@@ -3,6 +3,8 @@ const got = require('got');
 const HttpAgent = require('agentkeepalive');
 const HttpsAgent = HttpAgent.HttpsAgent;
 
+let _activity = null;
+
 function api(path, opts) {
   if (typeof path !== 'string') {
     return Promise.reject(new TypeError(`Expected \`path\` to be a string, got ${typeof path}`));
@@ -10,7 +12,7 @@ function api(path, opts) {
 
   opts = Object.assign({
     json: true,
-    token: Activity.Context.connector.token,
+    token: _activity.Context.connector.token,
     endpoint: 'https://api.hubapi.com',
     agent: {
       http: new HttpAgent(),
@@ -20,18 +22,14 @@ function api(path, opts) {
 
   opts.headers = Object.assign({
     accept: 'application/json',
-    'user-agent': 'adenin Now Assistant Connector, https://www.adenin.com/now-assistant'
+    'user-agent': 'adenin Digital Assistant Connector, https://www.adenin.com/digital-assistant'
   }, opts.headers);
 
-  if (opts.token) {
-    opts.headers.Authorization = `Bearer ${opts.token}`;
-  }
+  if (opts.token) opts.headers.Authorization = `Bearer ${opts.token}`;
 
   const url = /^http(s)\:\/\/?/.test(path) && opts.endpoint ? path : opts.endpoint + path;
 
-  if (opts.stream) {
-    return got.stream(url, opts);
-  }
+  if (opts.stream) return got.stream(url, opts);
 
   return got(url, opts).catch(err => {
     throw err;
@@ -46,6 +44,10 @@ const helpers = [
   'head',
   'delete'
 ];
+
+api.initialize = (activity) => {
+  _activity = activity;
+};
 
 api.stream = (url, opts) => apigot(url, Object.assign({}, opts, {
   json: false,
@@ -100,6 +102,6 @@ api.filterLeadsByDateRange = function (leads, dateRange) {
   }
 
   return filteredLeads;
-}
+};
 
 module.exports = api;

@@ -3,16 +3,17 @@ const api = require('./common/api');
 
 module.exports = async (activity) => {
   try {
+    api.initialize(activity)
     const response = await api('/contacts/v1/lists/all/contacts/recent?&property=hs_lead_status');
 
-    if (Activity.isErrorResponse(response)) return;
+    if ($.isErrorResponse(activity, response)) return;
 
-    var dateRange = Activity.dateRange("today");
+    var dateRange = $.dateRange(activity, "today");
     let filteredLeads = api.filterLeadsByDateRange(response.body.contacts, dateRange);
 
     activity.Response.Data = mapResponseToChartData(filteredLeads);
   } catch (error) {
-    Activity.handleError(error);
+    $.handleError(activity, error);
   }
 };
 //** maps response data to data format usable by chart */

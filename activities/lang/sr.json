@@ -16,5 +16,8 @@
   "New Leads": "Novi Kontakti",
   "You have {0} new leads.": "Imate {0} nova kontakta.",
   "You have 1 new lead.": "Imate 1 novi kontakt.",
-  "You have no new leads.": "Nemate nove kontakte"
+  "You have no new leads.": "Nemate nove kontakte",
+  "Create Hubspot Ticket": "Kreiraj Hubspot Tiket",
+  "Create Ticket": "Kreiraj Tiket",
+  "Ticket {0} created.": "Tiket {0} je kreiran."
 }

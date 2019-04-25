@@ -1,5 +1,8 @@
 'use strict';
 const api = require('./common/api');
+const path = require('path');
+const yaml = require('js-yaml');
+const fs = require('fs');
 
 module.exports = async (activity) => {
 
@@ -19,6 +22,7 @@ module.exports = async (activity) => {
       case "create":
       case "submit":
         const form = _action.form;
+        api.initialize(activity);
         var response = await api.post("/crm-objects/v1/objects/tickets", {
           json: true,
           body:
@@ -42,7 +46,7 @@ module.exports = async (activity) => {
             ]
         });
 
-        var comment = "Task created";
+        var comment = T(activity, "Ticket {0} created.", response.body.objectId);
         data = getObjPath(activity.Request, "Data.model");
         data._action = {
           response: {
@@ -53,14 +57,27 @@ module.exports = async (activity) => {
         break;
 
       default:
+        var fname = __dirname + path.sep + "common" + path.sep + "ticket-create.form";
+        var schema = yaml.safeLoad(fs.readFileSync(fname, 'utf8'));
+
+        data.title = T("Create Hubspot Ticket");
+        data.formSchema = schema;
+
         // initialize form subject with query parameter (if provided)
         if (activity.Request.Query && activity.Request.Query.query) {
           data = {
             form: {
               subject: activity.Request.Query.query
             }
-          }
+          };
         }
+        data._actionList = [{
+          id: "create",
+          label: T(activity, "Create Ticket"),
+          settings: {
+            actionType: "a"
+          }
+        }];
         break;
     }
 
@@ -69,7 +86,7 @@ module.exports = async (activity) => {
 
 
   } catch (error) {
-    Activity.handleError(error);
+    $.handleError(activity, error);
   }
 
   function getObjPath(obj, path) {
