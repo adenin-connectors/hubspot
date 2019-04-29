@@ -12,17 +12,16 @@ module.exports = async function (activity) {
     let url = `/contacts/search/v1/external/lifecyclestages?` +
       `fromTimestamp=${start}&toTimestamp=${end}`;
     const response = await api(url);
-
     if ($.isErrorResponse(activity, response)) return;
 
-    activity.Response.Data = mapResponseToChartData(response);
+    activity.Response.Data = mapResponseToChartData(activity,response);
   } catch (error) {
     $.handleError(activity, error);
   }
 };
 
 //** maps response data to data format usable by chart */
-function mapResponseToChartData(response) {
+function mapResponseToChartData(activity,response) {
   let labels = [];
   let datasets = [];
   let rawData = response.body;
@@ -31,7 +30,7 @@ function mapResponseToChartData(response) {
     labels.push(rawData[i].lifecycleStage.replace('hs_lifecyclestage_', '').replace('_date', ''));
     data.push(rawData[i].count);
   }
-  datasets.push({ label: 'Number Of Leads', data });
+  datasets.push({ label: T(activity,'Number Of Leads'), data });
 
   let chartData = {
     chart: {
@@ -40,7 +39,7 @@ function mapResponseToChartData(response) {
         options: {
           title: {
             display: true,
-            text: 'Lifecycle Stage Metrics'
+            text: T(activity,'Lifecycle Stage Metrics')
           }
         }
       },

@@ -1,6 +1,5 @@
-ServiceName: 'tickets-new'
-InterfaceName: 'status'
-Description: 'New Tickets'
+InterfaceName: 'items'
+Description: 'Recent Leads'
 APIDoc: ''
 Interfaces: 'daterange'
 RequiredScopes: ''

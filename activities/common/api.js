@@ -65,26 +65,27 @@ for (const x of helpers) {
 }
 
 //**maps response to items */
-api.mapLeadsToItems = function (response) {
+api.mapLeadsToItems = function (leads) {
   let items = [];
-  let leads = response.body.contacts;
 
   for (let i = 0; i < leads.length; i++) {
     let raw = leads[i];
     let firstname = raw.properties.firstname;
     let lastname = raw.properties.lastname;
-
+    let createTime = raw.addedAt ? raw.addedAt : raw.properties.createdate.value;
+    
     let item = {
-      id: raw.vid,
+      id: raw.vid.toString(),
       title: firstname == null ? null : firstname.value,
       description: lastname == null ? null : lastname.value,
+      date: new Date(parseInt(createTime)).toISOString(),
       link: raw["profile-url"],
       raw: raw
     };
     items.push(item);
   }
 
-  return { items: items };
+  return { items };
 };
 
 //**filters leads based on provided dateRange */
@@ -103,5 +104,16 @@ api.filterLeadsByDateRange = function (leads, dateRange) {
 
   return filteredLeads;
 };
+
+//** filters open tickets from response */
+api.filterOpenTickets = function (tickets) {
+  let openTickets = [];
+  for (let i = 0; i < tickets.length; i++) {
+    if (tickets[i].properties.hs_pipeline_stage.value != "4") {
+      openTickets.push(tickets[i]);
+    }
+  }
+  return openTickets;
+}
 
 module.exports = api;

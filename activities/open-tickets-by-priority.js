@@ -8,14 +8,14 @@ module.exports = async (activity) => {
 
     if ($.isErrorResponse(activity, response)) return;
 
-    activity.Response.Data = mapResponseToChartData(response);
+    activity.Response.Data = mapResponseToChartData(activity,response.body.objects);
   } catch (error) {
     $.handleError(activity, error);
   }
 };
 //** maps response data to data format usable by chart */
-function mapResponseToChartData(response) {
-  let tickets = response.body.objects;
+function mapResponseToChartData(activity,tickets) {
+  tickets = api.filterOpenTickets(tickets);
   let priorities = [];
   let datasets = [];
   let data = [];
@@ -39,7 +39,7 @@ function mapResponseToChartData(response) {
     }
     data.push(counter);
   }
-  datasets.push({ label: 'Number Of Tickets', data });
+  datasets.push({ label: T(activity,'Number Of Tickets'), data });
 
   let chartData = {
     chart: {
@@ -48,7 +48,7 @@ function mapResponseToChartData(response) {
         options: {
           title: {
             display: true,
-            text: 'Ticket Metrics By Priority'
+            text: T(activity,'Ticket Metrics By Priority')
           }
         }
       },

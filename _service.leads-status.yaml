@@ -1,4 +1,3 @@
-ServiceName: 'leads-status'
 InterfaceName: 'status'
 Description: 'Leads Status'
 APIDoc: ''

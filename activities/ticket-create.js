@@ -41,7 +41,7 @@ module.exports = async (activity) => {
               },
               {
                 "name": "hs_pipeline_stage",
-                "value": "1"
+                "value": form.pipelinestage
               }
             ]
         });

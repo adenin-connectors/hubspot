@@ -1,4 +1,3 @@
-ServiceName: 'ticket-status'
 InterfaceName: 'status'
 Description: 'Ticket Status'
 APIDoc: ''

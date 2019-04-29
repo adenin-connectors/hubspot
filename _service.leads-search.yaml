@@ -1,4 +1,3 @@
-ServiceName: 'leads-search'
 InterfaceName: 'items'
 Description: 'Search Leads'
 APIDoc: ''

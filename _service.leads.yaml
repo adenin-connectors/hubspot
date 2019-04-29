@@ -1,4 +1,3 @@
-ServiceName: 'leads'
 InterfaceName: 'items'
 Description: 'Leads'
 APIDoc: ''
