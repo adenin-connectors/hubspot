@@ -4,8 +4,7 @@ const api = require('./common/api');
 module.exports = async (activity) => {
   try {
     api.initialize(activity);
-    const response = await api('/crm-objects/v1/objects/tickets/paged?properties=hs_ticket_priority');
-
+    const response = await api('/crm-objects/v1/objects/tickets/paged?properties=hs_ticket_priority&properties=hs_pipeline_stage');
     if ($.isErrorResponse(activity, response)) return;
 
     activity.Response.Data = mapResponseToChartData(activity,response.body.objects);

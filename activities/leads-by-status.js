@@ -8,8 +8,8 @@ module.exports = async (activity) => {
 
     if ($.isErrorResponse(activity, response)) return;
 
-    var dateRange = $.dateRange(activity, "today");
-    let filteredLeads = api.filterLeadsByDateRange(response.body.contacts, dateRange);
+    const dateRange = $.dateRange(activity, "today");
+    const filteredLeads = api.filterLeadsByDateRange(response.body.contacts, dateRange);
 
     activity.Response.Data = mapResponseToChartData(activity,filteredLeads);
   } catch (error) {

@@ -1,5 +1,5 @@
-InterfaceName: 'items'
-Description: List Of Tickets
+InterfaceName: 'status'
+Description: 'My Ticket Status'
 APIDoc: ''
 Interfaces: 'pagination'
 RequiredScopes: ''

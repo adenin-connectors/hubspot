@@ -4,9 +4,9 @@ const api = require('./common/api');
 module.exports = async function (activity) {
 
   try {
-    let dateRange = $.dateRange(activity, "today");
-    let start = new Date(dateRange.startDate).valueOf();
-    let end = new Date(dateRange.endDate).valueOf();
+    const dateRange = $.dateRange(activity, "today");
+    const start = new Date(dateRange.startDate).valueOf();
+    const end = new Date(dateRange.endDate).valueOf();
 
     api.initialize(activity);
     let url = `/contacts/search/v1/external/lifecyclestages?` +
@@ -24,8 +24,8 @@ module.exports = async function (activity) {
 function mapResponseToChartData(activity,response) {
   let labels = [];
   let datasets = [];
-  let rawData = response.body;
   let data = [];
+  const rawData = response.body;
   for (let i = 0; i < rawData.length; i++) {
     labels.push(rawData[i].lifecycleStage.replace('hs_lifecyclestage_', '').replace('_date', ''));
     data.push(rawData[i].count);

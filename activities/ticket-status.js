@@ -16,7 +16,7 @@ module.exports = async (activity) => {
       linkLabel: T(activity, 'All Tickets')
     };
 
-    let value = api.filterOpenTickets(tickets.body.objects).length;
+    const value = api.filterOpenTickets(tickets.body.objects).length;
 
     if (value != 0) {
       status = {

@@ -1,7 +1,7 @@
 InterfaceName: 'items'
-Description: List Of Tickets
+Description: 'My Recent Tickets'
 APIDoc: ''
-Interfaces: 'pagination'
+Interfaces: 'daterange'
 RequiredScopes: ''
 AdditionalParameters:
 Method: ''

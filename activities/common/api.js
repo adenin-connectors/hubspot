@@ -4,6 +4,7 @@ const HttpAgent = require('agentkeepalive');
 const HttpsAgent = HttpAgent.HttpsAgent;
 
 let _activity = null;
+let ownerId = null;
 
 function api(path, opts) {
   if (typeof path !== 'string') {
@@ -58,6 +59,10 @@ api.getCurrentUser = function () {
   return api('/integrations/v1/me');
 };
 
+api.getOwner = function () {
+  return api(`/owners/v2/owners?email=${_activity.Context.UserEmail}`);
+};
+
 for (const x of helpers) {
   const method = x.toUpperCase();
   api[x] = (url, opts) => api(url, Object.assign({}, opts, { method }));
@@ -70,10 +75,10 @@ api.mapLeadsToItems = function (leads) {
 
   for (let i = 0; i < leads.length; i++) {
     let raw = leads[i];
-    let firstname = raw.properties.firstname;
-    let lastname = raw.properties.lastname;
-    let createTime = raw.addedAt ? raw.addedAt : raw.properties.createdate.value;
-    
+    const firstname = raw.properties.firstname;
+    const lastname = raw.properties.lastname;
+    const createTime = raw.addedAt ? raw.addedAt : raw.properties.createdate.value;
+
     let item = {
       id: raw.vid.toString(),
       title: firstname == null ? null : firstname.value,
@@ -91,12 +96,11 @@ api.mapLeadsToItems = function (leads) {
 //**filters leads based on provided dateRange */
 api.filterLeadsByDateRange = function (leads, dateRange) {
   let filteredLeads = [];
-  let timeMin = new Date(dateRange.startDate).valueOf();
-  let timeMax = new Date(dateRange.endDate).valueOf();
+  const timeMin = new Date(dateRange.startDate).valueOf();
+  const timeMax = new Date(dateRange.endDate).valueOf();
 
   for (let i = 0; i < leads.length; i++) {
     const lead = leads[i];
-
     if (lead.addedAt > timeMin && lead.addedAt < timeMax) {
       filteredLeads.push(lead);
     }
@@ -114,6 +118,58 @@ api.filterOpenTickets = function (tickets) {
     }
   }
   return openTickets;
-}
+};
 
+//** filters tickets assigned to current user */
+api.filterMyTickets = function (ownerId, tickets) {
+  let myTickets = [];
+
+  for (let i = 0; i < tickets.length; i++) {
+    if (tickets[i].properties.hubspot_owner_id) {
+      if (tickets[i].properties.hubspot_owner_id.versions[0].value == ownerId) {
+        myTickets.push(tickets[i]);
+      }
+    }
+  }
+  return myTickets;
+};
+
+//** filters tickets by provided daterange */
+api.filterTicketsByDateRange = function (tickets, dateRange) {
+  let recentTickets = [];
+  const timeMin = new Date(dateRange.startDate).valueOf();
+  const timeMax = new Date(dateRange.endDate).valueOf();
+
+  for (let i = 0; i < tickets.length; i++) {
+    const createTime = tickets[i].properties.createdate.value;
+    if (createTime > timeMin && createTime < timeMax) {
+      recentTickets.push(tickets[i]);
+    }
+  }
+
+  return recentTickets;
+};
+
+//**maps ticket[] to items */
+api.mapTicketsToItems = function (tickets) {
+  let items = [];
+  for (let i = 0; i < tickets.length; i++) {
+    const raw = tickets[i];
+    const ticketProps = raw.properties;
+    const ticketSubj = ticketProps.subject;
+    const ticketContent = ticketProps.content;
+
+    let item = {
+      id: raw.objectId.toString(),
+      title: ticketSubj == null ? null : ticketSubj.value,
+      description: ticketContent == null ? null : ticketContent.value,
+      date: new Date(parseInt(ticketProps.createdate.value)).toISOString(),
+      link: `https://app.hubspot.com/contacts/${raw.portalId}/ticket/${raw.objectId}`,
+      raw: raw
+    };
+    items.push(item);
+  }
+
+  return { items };
+}
 module.exports = api;

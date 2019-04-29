@@ -10,8 +10,8 @@ module.exports = async (activity) => {
     const newLeads = await api('/contacts/v1/lists/all/contacts/recent');
     if ($.isErrorResponse(activity, newLeads)) return;
 
-    var dateRange = $.dateRange(activity, "today");
-    let filteredLeads = api.filterLeadsByDateRange(newLeads.body.contacts, dateRange);
+    const dateRange = $.dateRange(activity, "today");
+    const filteredLeads = api.filterLeadsByDateRange(newLeads.body.contacts, dateRange);
 
     activity.Response.Data.items = api.mapLeadsToItems(filteredLeads);
     activity.Response.Data.title = T(activity, 'Recent Leads');

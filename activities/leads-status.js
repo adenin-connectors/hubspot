@@ -16,7 +16,7 @@ module.exports = async (activity) => {
       linkLabel: T(activity,'All Leads')
     };
 
-    let value = leads.body.contacts.length;
+    const value = leads.body.contacts.length;
 
     if (value != 0) {
       status = {

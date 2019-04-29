@@ -7,7 +7,7 @@ module.exports = async function (activity) {
     const currentUser = await api.getCurrentUser();
     if ($.isErrorResponse(activity, currentUser)) return;
 
-    let pagination = $.pagination(activity);
+    const pagination = $.pagination(activity);
     let url = `/contacts/v1/lists/all/contacts/all?count=${pagination.pageSize}`;
     if (pagination.nextpage) {
       url += `&vidOffset=${pagination.nextpage}`;
