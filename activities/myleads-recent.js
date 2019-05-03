@@ -23,17 +23,17 @@ module.exports = async (activity) => {
     }
     const currentOwnerId = currentOwner.body[0].ownerId;
 
-    const tickets = await api('/crm-objects/v1/objects/tickets/paged?properties=subject&properties=content&properties=createdate&properties=hs_pipeline_stage&properties=hubspot_owner_id');
-    if ($.isErrorResponse(activity, tickets)) return;
+    const response = await api('/contacts/v1/lists/all/contacts/recent?property=hubspot_owner_id&property=firstname&property=lastname&property=lastmodifieddate');
+    if ($.isErrorResponse(activity, response)) return;
 
+    let leads = api.filterMyLeads(currentOwnerId, response.body.contacts)
     const dateRange = $.dateRange(activity, "today");
-    let recentTickets = api.filterTicketsByDateRange(tickets.body.objects, dateRange);
-    recentTickets = api.filterMyTickets(currentOwnerId,recentTickets);
+    leads = api.filterLeadsByDateRange(leads, dateRange);
 
-    activity.Response.Data.items = api.mapTicketsToItems(recentTickets);
-    activity.Response.Data.title = T(activity, 'Recent Tickets');
-    activity.Response.Data.link = `https://app.hubspot.com/contacts/${currentUser.body.portalId}/tickets/list/view/all/`;
-    activity.Response.Data.linkLabel = T(activity, 'All Tickets');
+    activity.Response.Data.items = api.mapLeadsToItems(leads);
+    activity.Response.Data.title = T(activity, 'Recent Leads');
+    activity.Response.Data.link = `https://app.hubspot.com/contacts/${currentUser.body.portalId}/contacts/list/view/all`;
+    activity.Response.Data.linkLabel = T(activity, 'All Leads');
   } catch (error) {
     $.handleError(activity, error);
   }

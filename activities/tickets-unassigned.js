@@ -12,7 +12,7 @@ module.exports = async function (activity) {
     if ($.isErrorResponse(activity, response)) return;
 
     let tickets = api.filterOpenTickets(response.body.objects);
-    tickets = filterUnassignedTickets(tickets);
+    tickets = api.filterForUnassigned(tickets);
 
     activity.Response.Data.items = api.mapTicketsToItems(tickets);
     activity.Response.Data.title = T(activity, 'Unassigned Tickets');
@@ -22,15 +22,3 @@ module.exports = async function (activity) {
     $.handleError(activity, error);
   }
 };
-//** filters unassigned tickets from response */
-function filterUnassignedTickets(tickets) {
-  let unassignedTickets = [];
-
-  for (let i = 0; i < tickets.length; i++) {
-    if (!tickets[i].properties.hubspot_owner_id) {
-      unassignedTickets.push(tickets[i]);
-    }
-  }
-
-  return unassignedTickets;
-}

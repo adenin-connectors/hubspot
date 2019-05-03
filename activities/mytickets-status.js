@@ -5,17 +5,17 @@ module.exports = async (activity) => {
   try {
     api.initialize(activity);
 
-    const messagePromises = [];
-    messagePromises.push(api.getCurrentUser());
-    messagePromises.push(api.getOwner());
-    const messagesResponses = await Promise.all(messagePromises);
+    const promises = [];
+    promises.push(api.getCurrentUser());
+    promises.push(api.getOwner());
+    const responses = await Promise.all(promises);
 
-    for (let i = 0; i < messagesResponses.length; i++) {
-      if ($.isErrorResponse(activity, messagesResponses[i])) return;
+    for (let i = 0; i < responses.length; i++) {
+      if ($.isErrorResponse(activity, responses[i])) return;
     }
 
-    const currentUser = messagesResponses[0];
-    const currentOwner = messagesResponses[1];
+    const currentUser = responses[0];
+    const currentOwner = responses[1];
 
     if (currentOwner.body.length < 1) {
       //mail that we provided does not match any account on hubspot

@@ -1,5 +1,5 @@
 InterfaceName: 'items'
-Description: 'All Leads'
+Description: 'My Leads'
 APIDoc: ''
 Interfaces: 'pagination'
 RequiredScopes: ''

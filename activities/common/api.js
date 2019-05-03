@@ -80,6 +80,7 @@ api.mapLeadsToItems = function (leads) {
     const createTime = raw.addedAt ? raw.addedAt : raw.properties.createdate.value;
 
     let item = {
+      count: leads.length,
       id: raw.vid.toString(),
       title: firstname == null ? null : firstname.value,
       description: lastname == null ? null : lastname.value,
@@ -133,7 +134,31 @@ api.filterMyTickets = function (ownerId, tickets) {
   }
   return myTickets;
 };
+//** filters leads assigned to current user */
+api.filterMyLeads = function (ownerId, leads) {
+  let myLeads = [];
 
+  for (let i = 0; i < leads.length; i++) {
+    if (leads[i].properties.hubspot_owner_id) {
+      if (leads[i].properties.hubspot_owner_id.value == ownerId) {
+        myLeads.push(leads[i]);
+      }
+    }
+  }
+  return myLeads;
+};
+//** filters unassigned tickets and leads from response */
+api.filterForUnassigned = function (arrToCheck) {
+  let unassignedItems = [];
+
+  for (let i = 0; i < arrToCheck.length; i++) {
+    if (!arrToCheck[i].properties.hubspot_owner_id || !arrToCheck[i].properties.hubspot_owner_id.value) {
+      unassignedItems.push(arrToCheck[i]);
+    }
+  }
+
+  return unassignedItems;
+}
 //** filters tickets by provided daterange */
 api.filterTicketsByDateRange = function (tickets, dateRange) {
   let recentTickets = [];

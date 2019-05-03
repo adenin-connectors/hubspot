@@ -1,7 +1,7 @@
 InterfaceName: 'items'
-Description: 'All Leads'
+Description: 'Unassigned Leads'
 APIDoc: ''
-Interfaces: 'pagination'
+Interfaces: ''
 RequiredScopes: ''
 AdditionalParameters:
 Method: ''

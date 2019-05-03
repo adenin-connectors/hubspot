@@ -24,23 +24,23 @@ module.exports = async function (activity) {
     const currentOwnerId = currentOwner.body[0].ownerId;
 
     const pagination = $.pagination(activity);
-    let url = `/crm-objects/v1/objects/tickets/paged?properties=subject&properties=content&properties=createdate&properties=hs_pipeline_stage&properties=hubspot_owner_id`;
+    let url = `/contacts/v1/lists/all/contacts/all?property=hubspot_owner_id&property=firstname&property=lastname&property=lastmodifieddate&count=${pagination.pageSize}`;
     if (pagination.nextpage) {
-      url += `&offset=${pagination.nextpage}`;
+      url += `&vidOffset=${pagination.nextpage}`;
     }
+  // url = '/properties/v1/contacts/properties';
     const response = await api(url);
     if ($.isErrorResponse(activity, response)) return;
 
-    let tickets = api.filterOpenTickets(response.body.objects);
-    tickets = api.filterMyTickets(currentOwnerId, tickets);
+    let leads = api.filterMyLeads(currentOwnerId, response.body.contacts);
 
-    activity.Response.Data.items = api.mapTicketsToItems(tickets);
-    activity.Response.Data.title = T(activity, 'Open Tickets');
-    activity.Response.Data.link = `https://app.hubspot.com/contacts/${currentUser.body.portalId}/tickets/list/view/all/`;
-    activity.Response.Data.linkLabel = T(activity, 'All Tickets');
+    activity.Response.Data.items = api.mapLeadsToItems(leads);
+    activity.Response.Data.title = T(activity, 'Leads');
+    activity.Response.Data.link = `https://app.hubspot.com/contacts/${currentUser.body.portalId}/contacts/list/view/all`;
+    activity.Response.Data.linkLabel = T(activity, 'All Leads');
 
-    if (response.body.hasMore) {
-      activity.Response.Data._nextpage = response.body.offset;
+    if (response.body['has-more']) {
+      activity.Response.Data._nextpage = response.body['vid-offset'];
     }
   } catch (error) {
     $.handleError(activity, error);
