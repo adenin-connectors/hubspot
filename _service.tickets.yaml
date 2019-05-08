@@ -1,7 +1,7 @@
 InterfaceName: 'items'
 Description: List Of Tickets
 APIDoc: ''
-Interfaces: 'pagination'
+Interfaces: 'pagination,daterange,status'
 RequiredScopes: ''
 AdditionalParameters:
 Method: ''

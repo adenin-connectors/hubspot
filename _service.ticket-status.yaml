@@ -1,7 +1,0 @@
-InterfaceName: 'status'
-Description: 'Ticket Status'
-APIDoc: ''
-Interfaces: 'pagination'
-RequiredScopes: ''
-AdditionalParameters:
-Method: ''
