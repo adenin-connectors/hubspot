@@ -1,7 +1,0 @@
-InterfaceName: 'items'
-Description: 'Recent Leads'
-APIDoc: ''
-Interfaces: 'daterange'
-RequiredScopes: ''
-AdditionalParameters:
-Method: ''

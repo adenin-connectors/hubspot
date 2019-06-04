@@ -23,24 +23,51 @@ module.exports = async function (activity) {
     }
     const currentOwnerId = currentOwner.body[0].ownerId;
 
-    const pagination = $.pagination(activity);
-    let url = `/contacts/v1/lists/all/contacts/all?property=hubspot_owner_id&property=firstname&property=lastname&property=lastmodifieddate&count=${pagination.pageSize}`;
-    if (pagination.nextpage) {
-      url += `&vidOffset=${pagination.nextpage}`;
-    }
-  // url = '/properties/v1/contacts/properties';
-    const response = await api(url);
-    if ($.isErrorResponse(activity, response)) return;
+    let allLeads = [];
 
-    let leads = api.filterMyLeads(currentOwnerId, response.body.contacts);
+    let url = `/contacts/v1/lists/all/contacts/all?property=hubspot_owner_id&property=firstname&property=lastname` +
+      `&property=lastmodifieddate&count=100`;
+    let response = await api(url);
+    if ($.isErrorResponse(activity, response)) return;
+    allLeads.push(...response.body.contacts);
+
+    let nextPageToken = null;
+    if (response.body['has-more']) {
+      nextPageToken = response.body['vid-offset'];
+    }
+
+    while (nextPageToken) {
+      url = `/contacts/v1/lists/all/contacts/all?property=hubspot_owner_id&property=firstname&property=lastname` +
+        `&property=lastmodifieddate&count=100&vidOffset=${nextPageToken}`;
+      response = await api(url);
+      if ($.isErrorResponse(activity, response)) return;
+      allLeads.push(...response.body.contacts);
+      nextPageToken = null;
+      if (response.body['has-more']) {
+        nextPageToken = response.body['vid-offset'];
+      }
+    }
+
+    let leads = api.filterMyLeads(currentOwnerId, allLeads);
+    const dateRange = $.dateRange(activity);
+    leads = api.filterLeadsByDateRange(leads, dateRange);
+    let value = leads.length;
+    const pagination = $.pagination(activity);
+    leads = api.paginateItems(leads, pagination);
 
     activity.Response.Data.items = api.mapLeadsToItems(leads);
     activity.Response.Data.title = T(activity, 'Leads');
     activity.Response.Data.link = `https://app.hubspot.com/contacts/${currentUser.body.portalId}/contacts/list/view/all`;
     activity.Response.Data.linkLabel = T(activity, 'All Leads');
+    activity.Response.Data.actionable = value > 0;
+    activity.Response.Data.value = value;
 
-    if (response.body['has-more']) {
-      activity.Response.Data._nextpage = response.body['vid-offset'];
+    if (value > 0) {
+      activity.Response.Data.color = 'blue';
+      activity.Response.Data.description = value > 1 ? T(activity, "You have {0} leads.", value) :
+        T(activity, "You have 1 lead.");
+    } else {
+      activity.Response.Data.description = T(activity, `You have no leads.`);
     }
   } catch (error) {
     $.handleError(activity, error);

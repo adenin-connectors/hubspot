@@ -1,7 +1,7 @@
-InterfaceName: 'items'
+InterfaceName: 'status'
 Description: 'My Leads'
 APIDoc: ''
-Interfaces: 'pagination'
+Interfaces: 'items,daterange,pagination'
 RequiredScopes: ''
 AdditionalParameters:
 Method: ''

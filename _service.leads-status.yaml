@@ -1,7 +1,0 @@
-InterfaceName: 'status'
-Description: 'Leads Status'
-APIDoc: ''
-Interfaces: 'pagination'
-RequiredScopes: ''
-AdditionalParameters:
-Method: ''
