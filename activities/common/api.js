@@ -212,5 +212,5 @@ api.paginateItems = function (items, pagination) {
     pagiantedItems.push(items[i]);
   }
   return pagiantedItems;
-}
+};
 module.exports = api;

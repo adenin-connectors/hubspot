@@ -7,21 +7,39 @@ module.exports = async function (activity) {
     const currentUser = await api.getCurrentUser();
     if ($.isErrorResponse(activity, currentUser)) return;
 
-    const pagination = $.pagination(activity);
-    let url = `/crm-objects/v1/objects/tickets/paged?properties=subject&properties=content&properties=createdate&properties=hs_pipeline_stage`;
-    if (pagination.nextpage) {
-      url += `&offset=${pagination.nextpage}`;
-    }
-    const response = await api(url);
-    if ($.isErrorResponse(activity, response)) return;
+    let allTickets = [];
 
-    let tickets = api.filterOpenTickets(response.body.objects);
+    let url = `/crm-objects/v1/objects/tickets/paged?properties=subject&properties=content&properties=createdate&properties=hs_pipeline_stage&count=100`;
+    let response = await api(url);
+    if ($.isErrorResponse(activity, response)) return;
+    allTickets.push(...response.body.objects);
+
+    let nextPageToken = null;
+    if (response.body['has-more']) {
+      nextPageToken = response.body['vid-offset'];
+    }
+
+    while (nextPageToken) {
+      url = `/crm-objects/v1/objects/tickets/paged?properties=subject&properties=content&properties=createdate` +
+        `&properties=hs_pipeline_stage&count=100&vidOffset=${nextPageToken}`;
+      response = await api(url);
+      if ($.isErrorResponse(activity, response)) return;
+      allTickets.push(...response.body.objects);
+      nextPageToken = null;
+      if (response.body['has-more']) {
+        nextPageToken = response.body['vid-offset'];
+      }
+    }
+
     const dateRange = $.dateRange(activity, "today");
-    tickets = api.filterTicketsByDateRange(tickets, dateRange);
+    let tickets = api.filterTicketsByDateRange(allTickets, dateRange);
+    let value = tickets.length;
+
+    const pagination = $.pagination(activity);
+    tickets = api.paginateItems(tickets, pagination);
 
     activity.Response.Data.items = api.mapTicketsToItems(tickets);
-    let value = activity.Response.Data.items.items.length;
-    activity.Response.Data.title = T(activity, 'Open Tickets');
+    activity.Response.Data.title = T(activity, 'All Tickets');
     activity.Response.Data.link = `https://app.hubspot.com/contacts/${currentUser.body.portalId}/tickets/list/view/all/`;
     activity.Response.Data.linkLabel = T(activity, 'All Tickets');
     activity.Response.Data.actionable = value > 0;
@@ -33,10 +51,6 @@ module.exports = async function (activity) {
         : T(activity, "You have 1 ticket.");
     } else {
       activity.Response.Data.description = T(activity, `You have no tickets.`);
-    }
-
-    if (response.body.hasMore) {
-      activity.Response.Data._nextpage = response.body.offset;
     }
   } catch (error) {
     $.handleError(activity, error);
