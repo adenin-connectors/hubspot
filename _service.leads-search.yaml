@@ -1,7 +1,0 @@
-InterfaceName: 'items'
-Description: 'Search Leads'
-APIDoc: ''
-Interfaces: 'search,pagination'
-RequiredScopes: ''
-AdditionalParameters:
-Method: ''
