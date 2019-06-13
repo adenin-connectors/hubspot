@@ -1,8 +1,0 @@
-ServiceName: 'leads-new'
-InterfaceName: 'status'
-Description: 'New Leads'
-APIDoc: ''
-Interfaces: 'daterange'
-RequiredScopes: ''
-AdditionalParameters:
-Method: ''

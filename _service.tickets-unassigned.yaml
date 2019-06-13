@@ -1,5 +1,5 @@
-InterfaceName: 'create'
-Description: 'Create Ticket'
+InterfaceName: 'items'
+Description: List Of Unassigned Tickets
 APIDoc: ''
 Interfaces: ''
 RequiredScopes: ''

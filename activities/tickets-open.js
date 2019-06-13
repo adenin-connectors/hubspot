@@ -31,8 +31,9 @@ module.exports = async function (activity) {
       }
     }
 
+    let tickets = api.filterOpenTickets(allTickets);
     const dateRange = $.dateRange(activity, "today");
-    let tickets = api.filterTicketsByDateRange(allTickets, dateRange);
+    tickets = api.filterTicketsByDateRange(tickets, dateRange);
     let value = tickets.length;
 
     const pagination = $.pagination(activity);

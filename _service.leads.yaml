@@ -1,8 +1,7 @@
-ServiceName: 'leads'
-InterfaceName: 'items'
-Description: 'Leads'
+InterfaceName: 'status'
+Description: 'All Leads'
 APIDoc: ''
-Interfaces: 'pagination'
+Interfaces: 'items,daterange,pagination'
 RequiredScopes: ''
 AdditionalParameters:
 Method: ''

@@ -10,6 +10,21 @@ properties:
     title: Description
     xtype: textarea
     name: description
+  pipelinestage:
+    type: string
+    title: Pipeline Stage
+    xtype: enum
+    name: pipelinestage
+    xvaluelist:
+      - value: 1
+        title: New
+      - value: 2
+        title: Waiting On Contact
+      - value: 3
+        title: Waiting On Us
+      - value: 4
+        title: Closed
+    default: 1 
 rules:
   - caption: 'Rule #1'
     position: !!int 1

@@ -1,8 +1,7 @@
-ServiceName: 'leads-status'
 InterfaceName: 'status'
-Description: 'Leads Status'
+Description: My Tickets
 APIDoc: ''
-Interfaces: 'pagination'
+Interfaces: 'items,pagination,daterange'
 RequiredScopes: ''
 AdditionalParameters:
 Method: ''

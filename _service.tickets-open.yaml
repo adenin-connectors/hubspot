@@ -1,8 +1,7 @@
-ServiceName: 'ticket-status'
 InterfaceName: 'status'
-Description: 'Ticket Status'
+Description: Open Tickets
 APIDoc: ''
-Interfaces: 'pagination'
+Interfaces: 'items,pagination,daterange'
 RequiredScopes: ''
 AdditionalParameters:
 Method: ''

@@ -5,6 +5,7 @@ module.exports = async (activity) => {
   try {
     api.initialize(activity);
     const response = await api('/integrations/v1/me');
+    if ($.isErrorResponse(activity, response)) return;
 
     activity.Response.Data = {
       success: response && response.statusCode === 200

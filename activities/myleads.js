@@ -4,8 +4,24 @@ const api = require('./common/api');
 module.exports = async function (activity) {
   try {
     api.initialize(activity);
-    const currentUser = await api.getCurrentUser();
-    if ($.isErrorResponse(activity, currentUser)) return;
+
+    const promises = [];
+    promises.push(api.getCurrentUser());
+    promises.push(api.getOwner());
+    const responses = await Promise.all(promises);
+
+    for (let i = 0; i < responses.length; i++) {
+      if ($.isErrorResponse(activity, responses[i])) return;
+    }
+
+    const currentUser = responses[0];
+    const currentOwner = responses[1];
+
+    if (currentOwner.body.length < 1) {
+      //mail that we provided does not match any account on hubspot
+      return;
+    }
+    const currentOwnerId = currentOwner.body[0].ownerId;
 
     let allLeads = [];
 
@@ -32,8 +48,9 @@ module.exports = async function (activity) {
       }
     }
 
+    let leads = api.filterMyLeads(currentOwnerId, allLeads);
     const dateRange = $.dateRange(activity);
-    let leads = api.filterLeadsByDateRange(allLeads, dateRange);
+    leads = api.filterLeadsByDateRange(leads, dateRange);
     let value = leads.length;
     const pagination = $.pagination(activity);
     leads = api.paginateItems(leads, pagination);

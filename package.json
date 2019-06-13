@@ -14,7 +14,7 @@
     "js-yaml": "^3.13.1"
   },
   "devDependencies": {
-    "@adenin/cf-logger": "^1.5.1",
+    "@adenin/cf-logger": "^1.6.1",
     "decache": "^4.5.1",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",

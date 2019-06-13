@@ -1,4 +1,3 @@
-ServiceName: 'myleadsmetrics'
 InterfaceName: 'chart'
 Description: 'Leads Metrics'
 APIDoc: ''

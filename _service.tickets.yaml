@@ -1,8 +1,7 @@
-ServiceName: 'tickets'
-InterfaceName: 'items'
-Description: List Of Tickets
+InterfaceName: 'status'
+Description: All Tickets
 APIDoc: ''
-Interfaces: 'pagination'
+Interfaces: 'items,pagination,daterange'
 RequiredScopes: ''
 AdditionalParameters:
 Method: ''

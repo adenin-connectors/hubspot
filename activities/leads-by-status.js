@@ -8,16 +8,16 @@ module.exports = async (activity) => {
 
     if ($.isErrorResponse(activity, response)) return;
 
-    var dateRange = $.dateRange(activity, "today");
-    let filteredLeads = api.filterLeadsByDateRange(response.body.contacts, dateRange);
+    const dateRange = $.dateRange(activity, "today");
+    const filteredLeads = api.filterLeadsByDateRange(response.body.contacts, dateRange);
 
-    activity.Response.Data = mapResponseToChartData(filteredLeads);
+    activity.Response.Data = mapResponseToChartData(activity,filteredLeads);
   } catch (error) {
     $.handleError(activity, error);
   }
 };
 //** maps response data to data format usable by chart */
-function mapResponseToChartData(leads) {
+function mapResponseToChartData(activity,leads) {
   let labels = [];
   let datasets = [];
   let data = [];
@@ -39,7 +39,7 @@ function mapResponseToChartData(leads) {
     }
     data.push(counter);
   }
-  datasets.push({ label: 'Number Of Leads', data });
+  datasets.push({ label: T(activity,'Number Of Leads'), data });
 
   let chartData = {
     chart: {
@@ -48,7 +48,7 @@ function mapResponseToChartData(leads) {
         options: {
           title: {
             display: true,
-            text: 'Lead Metrics By Status'
+            text: T(activity,'Lead Metrics By Status')
           }
         }
       },
