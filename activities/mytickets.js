@@ -53,12 +53,17 @@ module.exports = async function (activity) {
 
     const dateRange = $.dateRange(activity, "today");
     tickets = api.filterTicketsByDateRange(tickets, dateRange);
-
+    let value = tickets.length;
+    
     const pagination = $.pagination(activity);
     tickets = api.paginateItems(tickets, pagination);
+    tickets = api.mapTicketsToItems(tickets);
 
-    activity.Response.Data.items = api.mapTicketsToItems(tickets);
-    let value = activity.Response.Data.items.items.length;
+    tickets.sort((a, b) => {
+      return new Date(b.date) - new Date(a.date); //descending
+    });
+
+    activity.Response.Data.items = tickets;
     activity.Response.Data.title = T(activity, 'Open Tickets');
     activity.Response.Data.link = `https://app.hubspot.com/contacts/${currentUser.body.portalId}/tickets/list/view/all/`;
     activity.Response.Data.linkLabel = T(activity, 'All Tickets');
@@ -66,6 +71,7 @@ module.exports = async function (activity) {
 
     if (value > 0) {
       activity.Response.Data.value = value;
+      activity.Response.Data.date = activity.Response.Data.items[0].date;
       activity.Response.Data.color = 'blue';
       activity.Response.Data.description = value > 1 ? T(activity, "You have {0} tickets.", value)
         : T(activity, "You have 1 ticket.");

@@ -54,16 +54,22 @@ module.exports = async function (activity) {
     let value = leads.length;
     const pagination = $.pagination(activity);
     leads = api.paginateItems(leads, pagination);
+    leads = api.mapLeadsToItems(leads);
 
-    activity.Response.Data.items = api.mapLeadsToItems(leads);
+    leads.sort((a, b) => {
+      return new Date(b.date) - new Date(a.date); //descending
+    });
+
+    activity.Response.Data.items = leads;
     activity.Response.Data.title = T(activity, 'Leads');
     activity.Response.Data.link = `https://app.hubspot.com/contacts/${currentUser.body.portalId}/contacts/list/view/all`;
     activity.Response.Data.linkLabel = T(activity, 'All Leads');
     activity.Response.Data.actionable = value > 0;
-    activity.Response.Data.value = value;
 
     if (value > 0) {
+      activity.Response.Data.value = value;
       activity.Response.Data.color = 'blue';
+      activity.Response.Data.date = activity.Response.Data.items[0].date;
       activity.Response.Data.description = value > 1 ? T(activity, "You have {0} leads.", value) :
         T(activity, "You have 1 lead.");
     } else {
