@@ -34,29 +34,33 @@ module.exports = async function (activity) {
 
     const dateRange = $.dateRange(activity);
     let leads = api.filterLeadsByDateRange(allLeads, dateRange);
-    let value = leads.length;
-    const pagination = $.pagination(activity);
-    leads = api.paginateItems(leads, pagination);
     leads = api.mapLeadsToItems(leads);
 
     leads.sort((a, b) => {
       return new Date(b.date) - new Date(a.date); //descending
     });
 
-    activity.Response.Data.items = leads;
-    activity.Response.Data.title = T(activity, 'Leads');
-    activity.Response.Data.link = `https://app.hubspot.com/contacts/${currentUser.body.portalId}/contacts/list/view/all`;
-    activity.Response.Data.linkLabel = T(activity, 'All Leads');
-    activity.Response.Data.actionable = value > 0;
+    let dateToAssign = leads[0].date;
+    let value = leads.length;
+    const pagination = $.pagination(activity);
+    leads = api.paginateItems(leads, pagination);
 
-    if (value > 0) {
-    activity.Response.Data.value = value;
-      activity.Response.Data.date = activity.Response.Data.items[0].date;
-      activity.Response.Data.color = 'blue';
-      activity.Response.Data.description = value > 1 ? T(activity, "You have {0} leads.", value) :
-        T(activity, "You have 1 lead.");
-    } else {
-      activity.Response.Data.description = T(activity, `You have no leads.`);
+    activity.Response.Data.items = leads;
+    if (parseInt(pagination.page) == 1) {
+      activity.Response.Data.title = T(activity, 'Leads');
+      activity.Response.Data.link = `https://app.hubspot.com/contacts/${currentUser.body.portalId}/contacts/list/view/all`;
+      activity.Response.Data.linkLabel = T(activity, 'All Leads');
+      activity.Response.Data.actionable = value > 0;
+
+      if (value > 0) {
+        activity.Response.Data.value = value;
+        activity.Response.Data.date = dateToAssign;
+        activity.Response.Data.color = 'blue';
+        activity.Response.Data.description = value > 1 ? T(activity, "You have {0} leads.", value) :
+          T(activity, "You have 1 lead.");
+      } else {
+        activity.Response.Data.description = T(activity, `You have no leads.`);
+      }
     }
   } catch (error) {
     $.handleError(activity, error);
