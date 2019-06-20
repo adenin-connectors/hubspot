@@ -31,7 +31,7 @@ module.exports = async function (activity) {
         nextPageToken = response.body['vid-offset'];
       }
     }
-
+    
     const dateRange = $.dateRange(activity);
     let leads = api.filterLeadsByDateRange(allLeads, dateRange);
     leads = api.mapLeadsToItems(leads);
@@ -40,7 +40,7 @@ module.exports = async function (activity) {
       return new Date(b.date) - new Date(a.date); //descending
     });
 
-    let dateToAssign = leads[0].date;
+    let dateToAssign = leads.length > 0 ? leads[0].date : null;
     let value = leads.length;
     const pagination = $.pagination(activity);
     leads = api.paginateItems(leads, pagination);

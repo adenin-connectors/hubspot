@@ -41,7 +41,7 @@ module.exports = async function (activity) {
       return new Date(b.date) - new Date(a.date); //descending
     });
 
-    let dateToAssign = tickets[0].date;
+    let dateToAssign = tickets.length > 0 ? tickets[0].date : null;
     let value = tickets.length;
 
     const pagination = $.pagination(activity);
