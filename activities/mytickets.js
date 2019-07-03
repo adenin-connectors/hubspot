@@ -53,28 +53,38 @@ module.exports = async function (activity) {
 
     const dateRange = $.dateRange(activity, "today");
     tickets = api.filterTicketsByDateRange(tickets, dateRange);
+    tickets = api.mapTicketsToItems(tickets);
+
+    tickets.sort((a, b) => {
+      return new Date(b.date) - new Date(a.date); //descending
+    });
+
+    let dateToAssign = tickets.length > 0 ? tickets[0].date : null;
+    let value = tickets.length;
 
     const pagination = $.pagination(activity);
     tickets = api.paginateItems(tickets, pagination);
 
-    activity.Response.Data.items = api.mapTicketsToItems(tickets);
-    let value = activity.Response.Data.items.items.length;
-    activity.Response.Data.title = T(activity, 'Open Tickets');
-    activity.Response.Data.link = `https://app.hubspot.com/contacts/${currentUser.body.portalId}/tickets/list/view/all/`;
-    activity.Response.Data.linkLabel = T(activity, 'All Tickets');
-    activity.Response.Data.actionable = value > 0;
+    activity.Response.Data.items = tickets;
+    if (parseInt(pagination.page) == 1) {
+      activity.Response.Data.title = T(activity, 'Open Tickets');
+      activity.Response.Data.link = `https://app.hubspot.com/contacts/${currentUser.body.portalId}/tickets/list/view/all/`;
+      activity.Response.Data.linkLabel = T(activity, 'All Tickets');
+      activity.Response.Data.actionable = value > 0;
 
-    if (value > 0) {
-      activity.Response.Data.value = value;
-      activity.Response.Data.color = 'blue';
-      activity.Response.Data.description = value > 1 ? T(activity, "You have {0} tickets.", value)
-        : T(activity, "You have 1 ticket.");
-    } else {
-      activity.Response.Data.description = T(activity, `You have no tickets.`);
-    }
+      if (value > 0) {
+        activity.Response.Data.value = value;
+        activity.Response.Data.date = dateToAssign;
+        activity.Response.Data.color = 'blue';
+        activity.Response.Data.description = value > 1 ? T(activity, "You have {0} tickets.", value)
+          : T(activity, "You have 1 ticket.");
+      } else {
+        activity.Response.Data.description = T(activity, `You have no tickets.`);
+      }
 
-    if (response.body.hasMore) {
-      activity.Response.Data._nextpage = response.body.offset;
+      if (response.body.hasMore) {
+        activity.Response.Data._nextpage = response.body.offset;
+      }
     }
   } catch (error) {
     $.handleError(activity, error);

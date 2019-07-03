@@ -1,7 +1,7 @@
 InterfaceName: 'status'
 Description: Open Tickets
 APIDoc: ''
-Interfaces: 'items,pagination,daterange'
+Interfaces: 'items,daterange,pagination'
 RequiredScopes: ''
 AdditionalParameters:
 Method: ''

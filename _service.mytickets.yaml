@@ -1,7 +1,7 @@
 InterfaceName: 'status'
 Description: My Tickets
 APIDoc: ''
-Interfaces: 'items,pagination,daterange'
+Interfaces: 'items,daterange,pagination'
 RequiredScopes: ''
 AdditionalParameters:
 Method: ''

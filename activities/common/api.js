@@ -90,7 +90,7 @@ api.mapLeadsToItems = function (leads) {
     items.push(item);
   }
 
-  return { items };
+  return items;
 };
 
 //**filters leads based on provided dateRange */
@@ -194,7 +194,7 @@ api.mapTicketsToItems = function (tickets) {
     items.push(item);
   }
 
-  return { items };
+  return items;
 };
 
 //** paginate items[] based on provided pagination */

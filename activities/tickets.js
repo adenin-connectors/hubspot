@@ -33,24 +33,34 @@ module.exports = async function (activity) {
 
     const dateRange = $.dateRange(activity, "today");
     let tickets = api.filterTicketsByDateRange(allTickets, dateRange);
+    tickets = api.mapTicketsToItems(tickets);
+
+    tickets.sort((a, b) => {
+      return new Date(b.date) - new Date(a.date); //descending
+    });
+    let dateToAssign = tickets[0].date;
     let value = tickets.length;
 
     const pagination = $.pagination(activity);
     tickets = api.paginateItems(tickets, pagination);
 
-    activity.Response.Data.items = api.mapTicketsToItems(tickets);
-    activity.Response.Data.title = T(activity, 'All Tickets');
-    activity.Response.Data.link = `https://app.hubspot.com/contacts/${currentUser.body.portalId}/tickets/list/view/all/`;
-    activity.Response.Data.linkLabel = T(activity, 'All Tickets');
-    activity.Response.Data.actionable = value > 0;
+    activity.Response.Data.items = tickets;
 
-    if (value > 0) {
-      activity.Response.Data.value = value;
-      activity.Response.Data.color = 'blue';
-      activity.Response.Data.description = value > 1 ? T(activity, "You have {0} tickets.", value)
-        : T(activity, "You have 1 ticket.");
-    } else {
-      activity.Response.Data.description = T(activity, `You have no tickets.`);
+    if (parseInt(pagination.page) == 1) {
+      activity.Response.Data.title = T(activity, 'All Tickets');
+      activity.Response.Data.link = `https://app.hubspot.com/contacts/${currentUser.body.portalId}/tickets/list/view/all/`;
+      activity.Response.Data.linkLabel = T(activity, 'All Tickets');
+      activity.Response.Data.actionable = value > 0;
+
+      if (value > 0) {
+        activity.Response.Data.value = value;
+        activity.Response.Data.date = dateToAssign;
+        activity.Response.Data.color = 'blue';
+        activity.Response.Data.description = value > 1 ? T(activity, "You have {0} tickets.", value)
+          : T(activity, "You have 1 ticket.");
+      } else {
+        activity.Response.Data.description = T(activity, `You have no tickets.`);
+      }
     }
   } catch (error) {
     $.handleError(activity, error);
