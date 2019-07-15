@@ -31,14 +31,14 @@ module.exports = async function (activity) {
       }
     }
 
-    const dateRange = $.dateRange(activity, "today");
+    const dateRange = $.dateRange(activity);
     let tickets = api.filterTicketsByDateRange(allTickets, dateRange);
     tickets = api.mapTicketsToItems(tickets);
 
     tickets.sort((a, b) => {
       return new Date(b.date) - new Date(a.date); //descending
     });
-    let dateToAssign = tickets[0].date;
+    let dateToAssign = tickets.length > 0 ? tickets[0].date : null;
     let value = tickets.length;
 
     const pagination = $.pagination(activity);
