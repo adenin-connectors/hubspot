@@ -32,7 +32,7 @@ module.exports = async function (activity) {
     }
 
     let tickets = api.filterOpenTickets(allTickets);
-    const dateRange = $.dateRange(activity, "today");
+    const dateRange = $.dateRange(activity);
     tickets = api.filterTicketsByDateRange(tickets, dateRange);
 
     tickets = api.mapTicketsToItems(tickets);

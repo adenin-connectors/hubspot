@@ -4,7 +4,7 @@ const api = require('./common/api');
 module.exports = async function (activity) {
 
   try {
-    const dateRange = $.dateRange(activity, "today");
+    const dateRange = $.dateRange(activity);
     const start = new Date(dateRange.startDate).valueOf();
     const end = new Date(dateRange.endDate).valueOf();
 
