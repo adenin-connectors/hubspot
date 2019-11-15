@@ -78,7 +78,7 @@ module.exports = async (activity) => {
     activity.Response.Data.items = leads;
 
     if (parseInt(pagination.page) === 1) {
-      activity.Response.Data.title = T(activity, 'Leads');
+      activity.Response.Data.title = T(activity, 'New Leads');
       activity.Response.Data.link = `https://app.hubspot.com/contacts/${currentUser.body.portalId}/contacts/list/view/all`;
       activity.Response.Data.linkLabel = T(activity, 'All Leads');
       activity.Response.Data.actionable = count > 0;
@@ -87,9 +87,9 @@ module.exports = async (activity) => {
         activity.Response.Data.value = count;
         activity.Response.Data.color = 'blue';
         activity.Response.Data.date = dateToAssign;
-        activity.Response.Data.description = count > 1 ? T(activity, 'You have {0} leads.', count) : T(activity, 'You have 1 lead.');
+        activity.Response.Data.description = count > 1 ? T(activity, 'You have {0} new leads.', count) : T(activity, 'You have 1 new lead.');
       } else {
-        activity.Response.Data.description = T(activity, 'You have no leads.');
+        activity.Response.Data.description = T(activity, 'You have no new leads.');
       }
     }
   } catch (error) {
