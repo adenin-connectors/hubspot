@@ -69,6 +69,7 @@ module.exports = async function (activity) {
       activity.Response.Data.link = `https://app.hubspot.com/contacts/${currentUser.body.portalId}/contacts/list/view/all`;
       activity.Response.Data.linkLabel = T(activity, 'All Leads');
       activity.Response.Data.actionable = value > 0;
+      activity.Response.Data.thumbnail = "https://www.adenin.com/assets/images/wp-images/logo/hubspot.svg";
 
       if (value > 0) {
         activity.Response.Data.value = value;
