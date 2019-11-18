@@ -1,0 +1,4 @@
+ServiceName: 'leads-new'
+InterfaceName: 'items'
+Description: 'New Leads'
+Interfaces: 'items,daterange,pagination'
