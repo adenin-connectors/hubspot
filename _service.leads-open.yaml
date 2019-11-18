@@ -1,0 +1,4 @@
+ServiceName: 'leads-open'
+InterfaceName: 'items'
+Description: 'Open Leads'
+Interfaces: 'items,daterange,pagination'

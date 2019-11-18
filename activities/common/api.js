@@ -71,22 +71,24 @@ for (const x of helpers) {
 
 //**maps response to items */
 api.mapLeadsToItems = function (leads) {
-  let items = [];
+  const items = [];
 
   for (let i = 0; i < leads.length; i++) {
-    let raw = leads[i];
+    const raw = leads[i];
     const firstname = raw.properties.firstname;
     const lastname = raw.properties.lastname;
+    const company = raw.properties.company;
     const createTime = raw.addedAt ? raw.addedAt : raw.properties.createdate.value;
 
-    let item = {
+    const item = {
       id: raw.vid.toString(),
-      title: firstname == null ? null : firstname.value,
-      description: lastname == null ? null : lastname.value,
+      title: (firstname ? firstname.value : '') + ' ' + (lastname ? lastname.value : ''),
+      description: company ? company.value : '',
       date: new Date(parseInt(createTime)).toISOString(),
-      link: raw["profile-url"],
+      link: raw['profile-url'],
       raw: raw
     };
+
     items.push(item);
   }
 
