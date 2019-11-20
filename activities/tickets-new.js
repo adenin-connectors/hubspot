@@ -53,7 +53,15 @@ module.exports = async function (activity) {
 
     tickets.sort($.compare.dateDescending);
 
-    const value = tickets.length;
+    let count = 0;
+    let readDate = (new Date(new Date().setDate(new Date().getDate() - 30))).toISOString(); // default read date 30 days in the past
+
+    if (activity.Request.Query.readDate) readDate = activity.Request.Query.readDate;
+
+    for (let i = 0; i < tickets.length; i++) {
+      if (tickets[i].date > readDate) count++;
+    }
+
     const pagination = $.pagination(activity);
 
     tickets = api.paginateItems(tickets, pagination);
@@ -61,18 +69,18 @@ module.exports = async function (activity) {
     activity.Response.Data.items = tickets;
 
     if (parseInt(pagination.page) === 1) {
-      activity.Response.Data.title = T(activity, 'Open Tickets');
+      activity.Response.Data.title = T(activity, 'New Tickets');
       activity.Response.Data.link = `https://app.hubspot.com/contacts/${currentUser.body.portalId}/tickets/list/view/all/`;
       activity.Response.Data.linkLabel = T(activity, 'All Tickets');
-      activity.Response.Data.actionable = value > 0;
+      activity.Response.Data.actionable = count > 0;
 
-      if (value > 0) {
-        activity.Response.Data.value = value;
+      if (count > 0) {
+        activity.Response.Data.value = count;
         activity.Response.Data.date = tickets[0].date;
         activity.Response.Data.color = 'blue';
-        activity.Response.Data.description = value > 1 ? T(activity, 'You have {0} open tickets.', value) : T(activity, 'You have 1 open ticket.');
+        activity.Response.Data.description = count > 1 ? T(activity, 'You have {0} new tickets.', count) : T(activity, 'You have 1 new ticket.');
       } else {
-        activity.Response.Data.description = T(activity, 'You have no open tickets.');
+        activity.Response.Data.description = T(activity, 'You have no new tickets.');
       }
     }
   } catch (error) {

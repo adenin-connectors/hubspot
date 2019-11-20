@@ -78,7 +78,16 @@ api.mapLeadsToItems = function (leads) {
     const firstname = raw.properties.firstname;
     const lastname = raw.properties.lastname;
     const company = raw.properties.company;
-    const createTime = raw.addedAt ? raw.addedAt : raw.properties.createdate.value;
+
+    let createTime;
+
+    if (raw.properties.createdate) {
+      createTime = raw.properties.createdate.value;
+    } else if (raw.properties.lastmodifieddate) {
+      createTime = raw.properties.lastmodifieddate.value;
+    } else if (raw.addedAt) {
+      createTime = raw.addedAt;
+    }
 
     const item = {
       id: raw.vid.toString(),

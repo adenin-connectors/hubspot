@@ -23,10 +23,9 @@ module.exports = async (activity) => {
     // mail that we provided does not match any account on hubspot
     if (currentOwner.body.length < 1) return;
 
-    const currentOwnerId = currentOwner.body[0].ownerId;
     const allLeads = [];
 
-    let url = '/contacts/v1/lists/all/contacts/recent?property=hubspot_owner_id&property=firstname&property=lastname&property=lastmodifieddate&count=100';
+    let url = '/contacts/v1/lists/all/contacts/recent?property=createdate&property=firstname&property=lastname&property=company&property=requested&count=100';
 
     let response = await api(url);
 
@@ -34,31 +33,38 @@ module.exports = async (activity) => {
 
     allLeads.push(...response.body.contacts);
 
-    let nextPageToken = null;
+    let vidOffset = null;
+    let timeOffset = null;
 
-    if (response.body['has-more']) nextPageToken = response.body['vid-offset'];
+    if (response.body['has-more']) {
+      vidOffset = response.body['vid-offset'];
+      timeOffset = response.body['time-offset'];
+    }
 
-    while (nextPageToken) {
-      url = `/contacts/v1/lists/all/contacts/recent?property=hubspot_owner_id&property=firstname&property=lastname&property=lastmodifieddate&count=100&vidOffset=${nextPageToken}`;
+    while (vidOffset && timeOffset) {
+      url = `/contacts/v1/lists/all/contacts/recent?property=createdate&property=firstname&property=lastname&property=company&property=requested&count=100&vidOffset=${vidOffset}&timeOffset=${timeOffset}`;
 
       response = await api(url);
 
       if ($.isErrorResponse(activity, response)) return;
 
       allLeads.push(...response.body.contacts);
-      nextPageToken = null;
 
-      if (response.body['has-more']) nextPageToken = response.body['vid-offset'];
+      vidOffset = null;
+      timeOffset = null;
+
+      if (response.body['has-more']) {
+        vidOffset = response.body['vid-offset'];
+        timeOffset = response.body['time-offset'];
+      }
     }
-
-    let leads = api.filterMyLeads(currentOwnerId, allLeads);
 
     const dateRange = $.dateRange(activity);
 
-    leads = api.filterLeadsByDateRange(leads, dateRange);
-    leads = api.mapLeadsToItems(leads);
+    let leads = api.filterLeadsByDateRange(allLeads, dateRange);
 
-    leads.sort((a, b) => new Date(b.date) - new Date(a.date)); // descending
+    leads = api.mapLeadsToItems(allLeads);
+    leads.sort($.compare.dateDescending); // descending
 
     const dateToAssign = leads.length > 0 ? leads[0].date : null;
 

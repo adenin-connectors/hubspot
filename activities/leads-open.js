@@ -68,7 +68,7 @@ module.exports = async (activity) => {
       return;
     }
 
-    let contactsResponse = await api(`/contacts/v1/lists/${openLeadsListId}/contacts/recent?count=100`);
+    let contactsResponse = await api(`/contacts/v1/lists/${openLeadsListId}/contacts/recent?property=createdate&property=firstname&property=lastname&property=company&property=requested&count=100`);
 
     const contacts = contactsResponse.body.contacts;
 
@@ -77,19 +77,28 @@ module.exports = async (activity) => {
       return;
     }
 
-    let vidOffset = null;
+    let vidOffset;
+    let timeOffset;
 
-    if (contactsResponse.body['has-more']) vidOffset = contactsResponse.body['vid-offset'];
+    if (contactsResponse.body['has-more']) {
+      vidOffset = contactsResponse.body['vid-offset'];
+      timeOffset = contactsResponse.body['time-offset'];
+    }
 
-    while (vidOffset) {
-      contactsResponse = await api(`/contacts/v1/lists/${openLeadsListId}/contacts/recent?count=100&vidOffset=${vidOffset}`);
+    while (vidOffset && timeOffset) {
+      contactsResponse = await api(`/contacts/v1/lists/${openLeadsListId}/contacts/recent?property=createdate&property=firstname&property=lastname&property=company&property=requested&count=100&vidOffset=${vidOffset}&timeOffset=${timeOffset}`);
 
       if ($.isErrorResponse(activity, contactsResponse)) return;
 
       contacts.push(...contactsResponse.body.contacts);
-      vidOffset = null;
 
-      if (contactsResponse.body['has-more']) vidOffset = contactsResponse.body['vid-offset'];
+      vidOffset = null;
+      timeOffset = null;
+
+      if (contactsResponse.body['has-more']) {
+        vidOffset = contactsResponse.body['vid-offset'];
+        timeOffset = contactsResponse.body['time-offset'];
+      }
     }
 
     const dateRange = $.dateRange(activity);
@@ -97,20 +106,9 @@ module.exports = async (activity) => {
     let items = api.filterLeadsByDateRange(contacts, dateRange);
 
     items = api.mapLeadsToItems(items);
+    items.sort($.compare.dateDescending); // descending
 
-    items.sort((a, b) => new Date(b.date) - new Date(a.date)); // descending
-
-    const dateToAssign = items.length > 0 ? items[0].date : null;
-
-    let count = 0;
-    let readDate = (new Date(new Date().setDate(new Date().getDate() - 30))).toISOString(); // default read date 30 days in the past
-
-    if (activity.Request.Query.readDate) readDate = activity.Request.Query.readDate;
-
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].date > readDate) count++;
-    }
-
+    const count = items.length;
     const pagination = $.pagination(activity);
 
     items = api.paginateItems(items, pagination);
@@ -125,7 +123,7 @@ module.exports = async (activity) => {
       if (count > 0) {
         activity.Response.Data.value = count;
         activity.Response.Data.color = 'blue';
-        activity.Response.Data.date = dateToAssign;
+        activity.Response.Data.date = items[0].date;
         activity.Response.Data.description = count > 1 ? T(activity, 'You have {0} open leads.', count) : T(activity, 'You have 1 open lead.');
       } else {
         activity.Response.Data.description = T(activity, 'You have no open leads.');
