@@ -92,9 +92,9 @@ module.exports = async (activity) => {
 
       if (count > 0) {
         activity.Response.Data.value = count;
-        activity.Response.Data.color = 'blue';
         activity.Response.Data.date = dateToAssign;
         activity.Response.Data.description = count > 1 ? T(activity, 'You have {0} new leads.', count) : T(activity, 'You have 1 new lead.');
+        activity.Response.Data.briefing = activity.Response.Data.description + ' The latest is <b>' + leads[0].title + '</b>';
       } else {
         activity.Response.Data.description = T(activity, 'You have no new leads.');
       }

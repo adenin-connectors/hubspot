@@ -119,12 +119,13 @@ module.exports = async (activity) => {
       activity.Response.Data.link = `https://app.hubspot.com/contacts/${currentUser.body.portalId}/lists/${openLeadsListId}`;
       activity.Response.Data.linkLabel = T(activity, 'All Open Leads');
       activity.Response.Data.actionable = count > 0;
+      activity.Response.Data.thumbnail = 'https://www.adenin.com/assets/images/wp-images/logo/hubspot.svg';
 
       if (count > 0) {
         activity.Response.Data.value = count;
-        activity.Response.Data.color = 'blue';
         activity.Response.Data.date = items[0].date;
         activity.Response.Data.description = count > 1 ? T(activity, 'You have {0} open leads.', count) : T(activity, 'You have 1 open lead.');
+        activity.Response.Data.briefing = activity.Response.Data.description + ' The latest is <b>' + items[0].title + '</b>';
       } else {
         activity.Response.Data.description = T(activity, 'You have no open leads.');
       }

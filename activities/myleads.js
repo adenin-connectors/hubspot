@@ -73,10 +73,10 @@ module.exports = async function (activity) {
 
       if (value > 0) {
         activity.Response.Data.value = value;
-        activity.Response.Data.color = 'blue';
         activity.Response.Data.date = dateToAssign;
         activity.Response.Data.description = value > 1 ? T(activity, "You have {0} leads.", value) :
           T(activity, "You have 1 lead.");
+        activity.Response.Data.briefing = activity.Response.Data.description + ' The latest is <b>' + leads[0].title + '</b>';
       } else {
         activity.Response.Data.description = T(activity, `You have no leads.`);
       }
