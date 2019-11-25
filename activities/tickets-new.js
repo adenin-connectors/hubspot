@@ -6,7 +6,7 @@ module.exports = async function (activity) {
   try {
     api.initialize(activity);
 
-    let url = '/crm-objects/v1/objects/tickets/paged?properties=subject&properties=content&properties=createdate&properties=hs_pipeline_stage&count=100';
+    let url = '/crm-objects/v1/objects/tickets/paged?properties=subject&properties=content&properties=createdate&properties=hs_pipeline_stage&properties=status&count=100';
 
     const promises = [];
 
@@ -31,7 +31,7 @@ module.exports = async function (activity) {
     if (ticketsResponse.body.hasMore) offset = ticketsResponse.body.offset;
 
     while (offset) {
-      url = `/crm-objects/v1/objects/tickets/paged?properties=subject&properties=content&properties=createdate&properties=hs_pipeline_stage&count=100&offset=${offset}`;
+      url = `/crm-objects/v1/objects/tickets/paged?properties=subject&properties=content&properties=createdate&properties=hs_pipeline_stage&properties=status&count=100&offset=${offset}`;
 
       ticketsResponse = await api(url);
 

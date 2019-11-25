@@ -78,10 +78,19 @@ module.exports = async (activity) => {
       activity.Response.Data.thumbnail = 'https://www.adenin.com/assets/images/wp-images/logo/hubspot.svg';
 
       if (count > 0) {
+        const first = leads[0];
+
         activity.Response.Data.value = count;
         activity.Response.Data.date = dateToAssign;
         activity.Response.Data.description = count > 1 ? T(activity, 'You have {0} new leads.', count) : T(activity, 'You have 1 new lead.');
-        activity.Response.Data.briefing = activity.Response.Data.description + ' The latest is <b>' + leads[0].title + '</b>';
+
+        if (first.raw.properties.company) {
+          activity.Response.Data.briefing = `You have a new lead from <strong>${first.raw.properties.company.value}</strong>`;
+
+          if (count > 1) activity.Response.Data.briefing += count > 2 ? ` and ${count - 1} more new leads` : ' and 1 more new lead';
+        } else {
+          activity.Response.Data.briefing = activity.Response.Data.description + ` The latest is <b>${first.title}</b>`;
+        }
       } else {
         activity.Response.Data.description = T(activity, 'You have no new leads.');
       }
