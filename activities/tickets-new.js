@@ -79,7 +79,9 @@ module.exports = async function (activity) {
         activity.Response.Data.value = count;
         activity.Response.Data.date = tickets[0].date;
         activity.Response.Data.description = count > 1 ? T(activity, 'You have {0} new tickets.', count) : T(activity, 'You have 1 new ticket.');
-        activity.Response.Data.briefing = activity.Response.Data.description + ' The latest is <b>' + tickets[0].title + '</b>';
+
+        // we use default briefing message for now, because tickets API alone is not returning any company or user info
+        activity.Response.Data.briefing = activity.Response.Data.description + ` The latest is <b>${tickets[0].title}</b>`;
       } else {
         activity.Response.Data.description = T(activity, 'You have no new tickets.');
       }
