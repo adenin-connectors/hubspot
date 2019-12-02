@@ -113,12 +113,12 @@ function getGravatarUrl(email) {
 
   if (!email || !(typeof email === 'string') || !(email instanceof String)) {
     md5.update('');
-    return `${gravatarBaseUrl}${md5.digest('hex')}?s=100&d=mp&f=y`;
+    return `${gravatarBaseUrl}${md5.digest('base64')}?s=100&d=mp&f=y`;
   }
 
   email = email.toLowerCase().trim();
 
-  const hash = md5.update(email).digest('hex');
+  const hash = md5.update(email).digest('base64');
 
   return `${gravatarBaseUrl}${hash}?s=100&d=mp`;
 }
