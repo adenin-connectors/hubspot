@@ -3,6 +3,8 @@ const got = require('got');
 const HttpAgent = require('agentkeepalive');
 const HttpsAgent = HttpAgent.HttpsAgent;
 
+const crypto = require('crypto');
+
 let _activity = null;
 let ownerId = null;
 
@@ -95,6 +97,7 @@ api.mapLeadsToItems = function (leads) {
       description: company ? company.value : '',
       date: new Date(parseInt(createTime)).toISOString(),
       link: raw['profile-url'],
+      thumbnail: getGravatarUrl(raw.properties.email ? raw.properties.email.value : ''),
       raw: raw
     };
 
@@ -103,6 +106,22 @@ api.mapLeadsToItems = function (leads) {
 
   return items;
 };
+
+function getGravatarUrl(email) {
+  const gravatarBaseUrl = 'https://www.gravatar.com/avatar/';
+  const md5 = crypto.createHash('md5');
+
+  if (!email || !(typeof email === 'string') || !(email instanceof String)) {
+    md5.update('');
+    return `${gravatarBaseUrl}${md5.digest('hex')}?s=100&d=mp&f=y`;
+  }
+
+  email = email.toLowerCase().trim();
+
+  const hash = md5.update(email).digest('hex');
+
+  return `${gravatarBaseUrl}${hash}?s=100&d=mp`;
+}
 
 //**filters leads based on provided dateRange */
 api.filterLeadsByDateRange = function (leads, dateRange) {

@@ -8,7 +8,7 @@ module.exports = async function (activity) {
     if ($.isErrorResponse(activity, currentUser)) return;
 
     const pagination = $.pagination(activity);
-    let url = `/contacts/v1/lists/all/contacts/all?property=hubspot_owner_id&property=firstname&property=lastname&property=lastmodifieddate&count=${pagination.pageSize}`;
+    let url = `/contacts/v1/lists/all/contacts/all?property=hubspot_owner_id&property=firstname&property=lastname&property=lastmodifieddate&property=email&count=${pagination.pageSize}`;
     if (pagination.nextpage) {
       url += `&vidOffset=${pagination.nextpage}`;
     }

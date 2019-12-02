@@ -68,7 +68,7 @@ module.exports = async (activity) => {
       return;
     }
 
-    let contactsResponse = await api(`/contacts/v1/lists/${openLeadsListId}/contacts/recent?property=createdate&property=firstname&property=lastname&property=company&property=requested&count=100`);
+    let contactsResponse = await api(`/contacts/v1/lists/${openLeadsListId}/contacts/recent?property=createdate&property=firstname&property=lastname&property=company&property=requested&property=email&count=100`);
 
     const contacts = contactsResponse.body.contacts;
 
@@ -86,7 +86,7 @@ module.exports = async (activity) => {
     }
 
     while (vidOffset && timeOffset) {
-      contactsResponse = await api(`/contacts/v1/lists/${openLeadsListId}/contacts/recent?property=createdate&property=firstname&property=lastname&property=company&property=requested&count=100&vidOffset=${vidOffset}&timeOffset=${timeOffset}`);
+      contactsResponse = await api(`/contacts/v1/lists/${openLeadsListId}/contacts/recent?property=createdate&property=firstname&property=lastname&property=company&property=requested&property=email&count=100&vidOffset=${vidOffset}&timeOffset=${timeOffset}`);
 
       if ($.isErrorResponse(activity, contactsResponse)) return;
 

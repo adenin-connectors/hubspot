@@ -9,7 +9,7 @@ module.exports = async function (activity) {
 
     let allLeads = [];
 
-    let url = `/contacts/v1/lists/all/contacts/all?property=hubspot_owner_id&property=firstname&property=lastname` +
+    let url = `/contacts/v1/lists/all/contacts/all?property=hubspot_owner_id&property=firstname&property=lastname&property=email` +
       `&property=lastmodifieddate&count=100`;
     let response = await api(url);
     if ($.isErrorResponse(activity, response)) return;
@@ -21,7 +21,7 @@ module.exports = async function (activity) {
     }
 
     while (nextPageToken) {
-      url = `/contacts/v1/lists/all/contacts/all?property=hubspot_owner_id&property=firstname&property=lastname` +
+      url = `/contacts/v1/lists/all/contacts/all?property=hubspot_owner_id&property=firstname&property=lastname&property=email` +
         `&property=lastmodifieddate&count=100&vidOffset=${nextPageToken}`;
       response = await api(url);
       if ($.isErrorResponse(activity, response)) return;

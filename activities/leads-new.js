@@ -12,7 +12,7 @@ module.exports = async (activity) => {
 
     const allLeads = [];
 
-    let url = '/contacts/v1/lists/all/contacts/recent?property=createdate&property=firstname&property=lastname&property=company&property=requested&count=100';
+    let url = '/contacts/v1/lists/all/contacts/recent?property=createdate&property=firstname&property=lastname&property=company&property=requested&property=email&count=100';
 
     let response = await api(url);
 
@@ -29,7 +29,7 @@ module.exports = async (activity) => {
     }
 
     while (vidOffset && timeOffset) {
-      url = `/contacts/v1/lists/all/contacts/recent?property=createdate&property=firstname&property=lastname&property=company&property=requested&count=100&vidOffset=${vidOffset}&timeOffset=${timeOffset}`;
+      url = `/contacts/v1/lists/all/contacts/recent?property=createdate&property=firstname&property=lastname&property=company&property=requested&property=email&count=100&vidOffset=${vidOffset}&timeOffset=${timeOffset}`;
 
       response = await api(url);
 
