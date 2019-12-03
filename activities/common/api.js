@@ -91,13 +91,15 @@ api.mapLeadsToItems = function (leads) {
       createTime = raw.addedAt;
     }
 
+    const name = (firstname ? firstname.value : '') + ' ' + (lastname ? lastname.value : '');
+
     const item = {
       id: raw.vid.toString(),
-      title: (firstname ? firstname.value : '') + ' ' + (lastname ? lastname.value : ''),
+      title: name,
       description: company ? company.value : '',
       date: new Date(parseInt(createTime)).toISOString(),
       link: raw['profile-url'],
-      thumbnail: getGravatarUrl(raw.properties.email ? raw.properties.email.value : ''),
+      thumbnail: $.avatarLink(name, raw.properties.email ? raw.properties.email.value : ''),
       raw: raw
     };
 
@@ -106,22 +108,6 @@ api.mapLeadsToItems = function (leads) {
 
   return items;
 };
-
-function getGravatarUrl(email) {
-  const gravatarBaseUrl = 'https://www.gravatar.com/avatar/';
-  const md5 = crypto.createHash('md5');
-
-  if (!email || (!(typeof email === 'string') && !(email instanceof String))) {
-    md5.update('');
-    return `${gravatarBaseUrl}${md5.digest('hex')}?s=192&d=mp&f=y`;
-  }
-
-  email = email.toLowerCase().trim();
-
-  const hash = md5.update(email).digest('hex');
-
-  return `${gravatarBaseUrl}${hash}?s=192&d=mp`;
-}
 
 //**filters leads based on provided dateRange */
 api.filterLeadsByDateRange = function (leads, dateRange) {
