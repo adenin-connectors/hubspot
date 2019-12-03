@@ -111,14 +111,14 @@ function getGravatarUrl(email) {
   const gravatarBaseUrl = 'https://www.gravatar.com/avatar/';
   const md5 = crypto.createHash('md5');
 
-  if (!email || !(typeof email === 'string') || !(email instanceof String)) {
+  if (!email || (!(typeof email === 'string') && !(email instanceof String))) {
     md5.update('');
-    return `${gravatarBaseUrl}${md5.digest('base64')}?s=100&d=mp&f=y`;
+    return `${gravatarBaseUrl}${md5.digest('hex')}?s=100&d=mp&f=y`;
   }
 
   email = email.toLowerCase().trim();
 
-  const hash = md5.update(email).digest('base64');
+  const hash = md5.update(email).digest('hex');
 
   return `${gravatarBaseUrl}${hash}?s=100&d=mp`;
 }
