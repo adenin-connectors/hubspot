@@ -92,6 +92,7 @@ api.mapLeadsToItems = function (leads) {
     }
 
     const name = (firstname ? firstname.value : '') + ' ' + (lastname ? lastname.value : '');
+    const email = raw.properties.email ? raw.properties.email.value : '';
 
     const item = {
       id: raw.vid.toString(),
@@ -99,7 +100,7 @@ api.mapLeadsToItems = function (leads) {
       description: company ? company.value : '',
       date: new Date(parseInt(createTime)).toISOString(),
       link: raw['profile-url'],
-      thumbnail: $.avatarLink(name, raw.properties.email ? raw.properties.email.value : ''),
+      thumbnail: $.avatarLink(name, email),
       raw: raw
     };
 
