@@ -61,7 +61,10 @@ module.exports = async (activity) => {
     if (activity.Request.Query.readDate) readDate = activity.Request.Query.readDate;
 
     for (let i = 0; i < leads.length; i++) {
-      if (leads[i].date > readDate) count++;
+      if (leads[i].date > readDate) {
+        leads[i].isNew = true;
+        count++;
+      }
     }
 
     const pagination = $.pagination(activity);
