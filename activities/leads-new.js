@@ -82,14 +82,12 @@ module.exports = async (activity) => {
 
       if (count > 0) {
         const first = leads[0];
-
         activity.Response.Data.value = count;
         activity.Response.Data.date = dateToAssign;
         activity.Response.Data.description = count > 1 ? T(activity, 'You have {0} new leads.', count) : T(activity, 'You have 1 new lead.');
 
-        if (first.raw.properties.company) {
-          activity.Response.Data.briefing = `You have a new lead from <strong>${first.raw.properties.company.value}</strong>`;
-
+        if (first.description) {
+          activity.Response.Data.briefing = `You have a new lead from <strong>${first.description}</strong>`;
           if (count > 1) activity.Response.Data.briefing += count > 2 ? ` and ${count - 1} more new leads` : ' and 1 more new lead';
         } else {
           activity.Response.Data.briefing = activity.Response.Data.description + ` The latest is <b>${first.title}</b>`;

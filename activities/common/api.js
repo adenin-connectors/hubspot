@@ -101,8 +101,7 @@ api.mapLeadsToItems = function (leads) {
       date: new Date(parseInt(createTime)).toISOString(),
       link: raw['profile-url'],
       thumbnail: $.avatarLink(name, email),
-      imageIsAvatar: true,
-      raw: raw
+      imageIsAvatar: true
     };
 
     items.push(item);

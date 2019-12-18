@@ -128,9 +128,8 @@ module.exports = async (activity) => {
         activity.Response.Data.date = first.date;
         activity.Response.Data.description = count > 1 ? T(activity, 'You have {0} open leads.', count) : T(activity, 'You have 1 open lead.');
 
-        if (first.raw.properties.company) {
-          activity.Response.Data.briefing = `You have an open lead from <strong>${first.raw.properties.company.value}</strong>`;
-
+        if (first.description) {
+          activity.Response.Data.briefing = `You have an open lead from <strong>${first.description}</strong>`;
           if (count > 1) activity.Response.Data.briefing += count > 2 ? ` and ${count - 1} more open leads` : ' and 1 more open lead';
         } else {
           activity.Response.Data.briefing = activity.Response.Data.description + ` The latest is <b>${first.title}</b>`;
