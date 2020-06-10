@@ -77,9 +77,17 @@ api.mapLeadsToItems = function (leads) {
 
   for (let i = 0; i < leads.length; i++) {
     const raw = leads[i];
-    const firstname = raw.properties.firstname;
+
+    let firstname = raw.properties.firstname;
+
     const lastname = raw.properties.lastname;
     const company = raw.properties.company;
+
+    if (!firstname && !lastname) {
+      firstname = {
+        value: raw.properties.email.value
+      };
+    }
 
     let createTime;
 
